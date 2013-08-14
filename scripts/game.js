@@ -17,30 +17,51 @@ Date.prototype.getNormalDay = function() {
 	return this.getDay()>0 ? this.getDay()-1 : 6;
 };
 
-
+var info = {
+	2013:{
+		7:{
+			14:{
+				text:"dasdas"
+			},
+			16:{
+				text:"dddd"
+			}
+		},
+		8:{
+			1:{
+				text:"hello, world"
+			}
+		}
+	}
+}
 
 $.fn.calendar = function(){
 	
-	var calendObj ={
+	var calendObj = {
+		self :null,
 		today : new Date(),
 		curDate : null,
 		prevBtn : $('.prev'),
 		nextBtn : $('.next'),
 		$elem : $(this),
 		init : function(){
-			curDate = this.today;
-			this.fullContainer();
-			this.bindHandlers();
+			self = this;
+			curDate = self.today;
+			self.fullContainer();
+			self.bindHandlers();
 		},
 		bindHandlers : function(){
-			var that = this;
-			that.prevBtn.on('click',function(){
-				that.prevMonth();
-				that.fullContainer();
+			self.prevBtn.on('click',function(){
+				self.prevMonth();
+				self.fullContainer();
 			});
-			that.nextBtn.on('click',function(){
-				that.nextMonth();
-				that.fullContainer();
+			self.nextBtn.on('click',function(){
+				self.nextMonth();
+				self.fullContainer();
+			});
+			self.$elem.find('.full').live('click',function(){
+				alert($(this).attr('data-info'));
+			
 			});
 		},
 		prevMonth : function(){
@@ -51,21 +72,30 @@ $.fn.calendar = function(){
 		}, 
 		fullContainer : function(){
 
-			var i = 0, j=0, d=1;	
-			this.$elem.html('');
+			var i = 0, j=0, d=1, infoText;	
+			self.$elem.html('<table></table>');
 			for(i=0;i<curDate.weeksInMonth();i++){
-				
+				self.$elem.find('table').append('<tr />')
 				j = 0;
 				while(j<curDate.firstDayInMonth() && i==0) {
 					j++;
-					this.$elem.append('<span></span>');
+					self.$elem.find('tr').append('<td />');
 				}
 				for(;j<7;j++,d++){
+				
 					if(d>curDate.daysInMonth()) break;
-					this.$elem.append('<span>'+d+'</span>');
+
+					$('<td>'+d+'</td>').attr('data-date',d).appendTo(self.$elem.find('tr').last());
+					
 				}
-				this.$elem.append('<br>');
 			}
+			
+			if( info[curDate.getFullYear()]&& info[curDate.getFullYear()][curDate.getMonth()] ){
+				for(var num in info[curDate.getFullYear()][curDate.getMonth()]){
+					self.$elem.find('td[data-date="'+num+'"]').attr('data-info',info[curDate.getFullYear()][curDate.getMonth()][num].text).addClass('full');
+				}
+			}
+			
 		}
 	}
 
