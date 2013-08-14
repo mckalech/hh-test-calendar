@@ -17,22 +17,62 @@ Date.prototype.getNormalDay = function() {
 	return this.getDay()>0 ? this.getDay()-1 : 6;
 };
 
-$(function(){
-	var i = 0, j=0, d=1,
-	today = new Date(2012,6,1);
+
+
+$.fn.calendar = function(){
 	
-	for(i=0;i<today.weeksInMonth();i++){
-		
-		j = 0;
-		while(j<today.firstDayInMonth() && i==0) {
-			j++;
-			$('html').append('<span></span>');
+	var calendObj ={
+		today : new Date(),
+		curDate : null,
+		prevBtn : $('.prev'),
+		nextBtn : $('.next'),
+		$elem : $(this),
+		init : function(){
+			curDate = this.today;
+			this.fullContainer();
+			this.bindHandlers();
+		},
+		bindHandlers : function(){
+			var that = this;
+			that.prevBtn.on('click',function(){
+				that.prevMonth();
+				that.fullContainer();
+			});
+			that.nextBtn.on('click',function(){
+				that.nextMonth();
+				that.fullContainer();
+			});
+		},
+		prevMonth : function(){
+			curDate.setMonth(curDate.getMonth()-1);
+		},
+		nextMonth : function(){
+			curDate.setMonth(curDate.getMonth()+1);
+		}, 
+		fullContainer : function(){
+
+			var i = 0, j=0, d=1;	
+			this.$elem.html('');
+			for(i=0;i<curDate.weeksInMonth();i++){
+				
+				j = 0;
+				while(j<curDate.firstDayInMonth() && i==0) {
+					j++;
+					this.$elem.append('<span></span>');
+				}
+				for(;j<7;j++,d++){
+					if(d>curDate.daysInMonth()) break;
+					this.$elem.append('<span>'+d+'</span>');
+				}
+				this.$elem.append('<br>');
+			}
 		}
-		for(;j<7;j++,d++){
-			if(d>today.daysInMonth()) break;
-			$('html').append('<span>'+d+'</span>');
-		}
-		$('html').append('<br>');
 	}
+
+	calendObj.init();
+}
+
+$(function(){
+	$('.container').calendar();
 	
 });
