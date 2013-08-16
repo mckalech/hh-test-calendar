@@ -41,12 +41,15 @@ $.fn.calendar = function(){
 		self :null,
 		today : new Date(),
 		curDate : null,
+		days : ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
+		months : ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
 		prevBtn : $('.prev'),
 		nextBtn : $('.next'),
+		monthElem : $('.month'),
 		$elem : $(this),
 		init : function(){
 			self = this;
-			curDate = self.today;
+			self.curDate = self.today;
 			self.fullContainer();
 			self.bindHandlers();
 		},
@@ -65,36 +68,42 @@ $.fn.calendar = function(){
 			});
 		},
 		prevMonth : function(){
-			curDate.setMonth(curDate.getMonth()-1);
+			self.curDate.setMonth(self.curDate.getMonth()-1);
 		},
 		nextMonth : function(){
-			curDate.setMonth(curDate.getMonth()+1);
+			self.curDate.setMonth(self.curDate.getMonth()+1);
 		}, 
 		fullContainer : function(){
 
-			var i = 0, j=0, d=1, infoText;	
+			var i = 0, j=0, d=1, dayText;	
+			
+			//создание таблицы и ее заполнение
 			self.$elem.html('<table></table>');
-			for(i=0;i<curDate.weeksInMonth();i++){
+			for(i=0;i<self.curDate.weeksInMonth();i++){
 				self.$elem.find('table').append('<tr />')
 				j = 0;
-				while(j<curDate.firstDayInMonth() && i==0) {
+				while(j<self.curDate.firstDayInMonth() && i==0) {					
+					self.$elem.find('tr').append('<td>'+self.days[j]+'</td');
 					j++;
-					self.$elem.find('tr').append('<td />');
 				}
 				for(;j<7;j++,d++){
 				
-					if(d>curDate.daysInMonth()) break;
-
-					$('<td>'+d+'</td>').attr('data-date',d).appendTo(self.$elem.find('tr').last());
+					if(d>self.curDate.daysInMonth()) break;
+					dayText =  i==0 ? self.days[j] +', '+ d : d;
+					$('<td>'+dayText+'</td>').attr('data-date',d).addClass(d==self.today.getDate() ? 'today' : '').appendTo(self.$elem.find('tr').last());
 					
 				}
 			}
 			
-			if( info[curDate.getFullYear()]&& info[curDate.getFullYear()][curDate.getMonth()] ){
-				for(var num in info[curDate.getFullYear()][curDate.getMonth()]){
-					self.$elem.find('td[data-date="'+num+'"]').attr('data-info',info[curDate.getFullYear()][curDate.getMonth()][num].text).addClass('full');
+			//наполение информацией
+			if( info[self.curDate.getFullYear()]&& info[self.curDate.getFullYear()][self.curDate.getMonth()] ){
+				for(var num in info[self.curDate.getFullYear()][self.curDate.getMonth()]){
+					self.$elem.find('td[data-date="'+num+'"]').attr('data-info',info[self.curDate.getFullYear()][self.curDate.getMonth()][num].text).addClass('full');
 				}
 			}
+			
+			//Смена названия месяца
+			self.monthElem.text(self.months[self.curDate.getMonth()]);
 			
 		}
 	}
