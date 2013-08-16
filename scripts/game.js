@@ -66,6 +66,7 @@ $.fn.calendar = function(){
 				alert($(this).attr('data-info'));
 			
 			});
+				
 		},
 		prevMonth : function(){
 			self.curDate.setMonth(self.curDate.getMonth()-1);
@@ -78,7 +79,7 @@ $.fn.calendar = function(){
 			var i = 0, j=0, d=1, dayText;	
 			
 			//создание таблицы и ее заполнение
-			self.$elem.html('<table></table>');
+			self.$elem.html('<table id="main-table" cellspacing="0"></table>');
 			for(i=0;i<self.curDate.weeksInMonth();i++){
 				self.$elem.find('table').append('<tr />')
 				j = 0;
@@ -90,7 +91,7 @@ $.fn.calendar = function(){
 				
 					if(d>self.curDate.daysInMonth()) break;
 					dayText =  i==0 ? self.days[j] +', '+ d : d;
-					$('<td>'+dayText+'</td>').attr('data-date',d).addClass(d==self.today.getDate() ? 'today' : '').appendTo(self.$elem.find('tr').last());
+					$('<td>'+dayText+'</td>').attr('data-date',d).addClass('item').addClass(d==self.today.getDate() ? 'today' : '').appendTo(self.$elem.find('tr').last());
 					
 				}
 			}

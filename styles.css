@@ -1,22 +1,22 @@
-table{
+#main-table{
 	margin-top:20px;
-	border-collapse:collapse;
 }
 
-td{
+#main-table td{
 	
 	height:60px;
 	width:110px;
 	font-size:12px;
 	vertical-align:top;
-	border:2px solid #e2e2e2;
+	border:1px solid #e2e2e2;
 }
-td:hover{
+
+#main-table .item:hover{
 	background:#a5dd0f;
 	cursor:pointer;
 	border-color:black;
 }
-.full{
+#main-table td.full{
 	background:#a5a5a5;
 }
 span{
