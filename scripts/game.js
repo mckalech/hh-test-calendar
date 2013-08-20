@@ -43,29 +43,40 @@ $.fn.calendar = function(){
 		curDate : null,
 		days : ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
 		months : ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-		prevBtn : $('.prev'),
-		nextBtn : $('.next'),
-		monthElem : $('.month'),
+		$prevBtn : $('.prev'),
+		$nextBtn : $('.next'),
+		$monthElem : $('.month'),
+		$popup : null, 
 		$elem : $(this),
+		$td : null,
 		init : function(){
 			self = this;
 			self.curDate = self.today;
+			self.$td = self.$elem.find('.item')
 			self.fullContainer();
+			self.addPopup();
 			self.bindHandlers();
 		},
 		bindHandlers : function(){
-			self.prevBtn.on('click',function(){
+			self.$prevBtn.on('click',function(){
 				self.prevMonth();
+				self.hidePopup();
 				self.fullContainer();
 			});
-			self.nextBtn.on('click',function(){
+			self.$nextBtn.on('click',function(){
 				self.nextMonth();
+				self.hidePopup();
 				self.fullContainer();
 			});
 			self.$elem.find('.full').live('click',function(){
 				alert($(this).attr('data-info'));
 			
 			});
+			self.$td.live('click',function(){
+				self.showPopup();
+			});
+			
+			
 				
 		},
 		prevMonth : function(){
@@ -104,9 +115,21 @@ $.fn.calendar = function(){
 			}
 			
 			//Смена названия месяца
-			self.monthElem.text(self.months[self.curDate.getMonth()]);
+			self.$monthElem.text(self.months[self.curDate.getMonth()]);
 			
-		}
+		},
+		
+		addPopup : function(){
+			self.$popup = $('<div />').addClass('cal__popup').appendTo('body').append('<span class="close" />');
+			
+		},
+		showPopup: function(){
+			self.$popup.fadeIn();
+		},
+		
+		hidePopup: function(){
+			self.$popup.fadeOut();
+		},
 	}
 
 	calendObj.init();
