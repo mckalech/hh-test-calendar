@@ -46,15 +46,15 @@ $.fn.calendar = function(){
 		$prevBtn : $('.prev'),
 		$nextBtn : $('.next'),
 		$monthElem : $('.month'),
-		$popup : null, 
+		$popup : $('.cal__popup'), 
 		$elem : $(this),
 		$td : null,
+		$curTd : null,
 		init : function(){
 			self = this;
 			self.curDate = self.today;
-			self.$td = self.$elem.find('.item')
 			self.fullContainer();
-			self.addPopup();
+			self.$td = self.$elem.find('.item');		
 			self.bindHandlers();
 		},
 		bindHandlers : function(){
@@ -69,11 +69,27 @@ $.fn.calendar = function(){
 				self.fullContainer();
 			});
 			self.$elem.find('.full').live('click',function(){
-				alert($(this).attr('data-info'));
+				//alert($(this).attr('data-info'));
 			
 			});
-			self.$td.live('click',function(){
-				self.showPopup();
+			self.$td.live('click',function(e){
+				self.showPopup({x:e.clientX,y:e.clientY});
+				self.setCurTd($(this));
+			});
+			
+			self.$popup.find('.close').live('click',function(){
+				self.hidePopup();
+			});
+			
+			self.$popup.find('input, textarea').live('blur',function(){				
+				var text = $(this).val();
+				if(text){
+					$(this).parent().removeClass('empty').find('span').text(text);
+				}				
+			});
+			self.$popup.find('p span').live('click',function(){
+				var text = $(this).text();
+				$(this).parent().addClass('empty').find('input, textarea').val(text).focus();
 			});
 			
 			
@@ -119,17 +135,25 @@ $.fn.calendar = function(){
 			
 		},
 		
-		addPopup : function(){
-			self.$popup = $('<div />').addClass('cal__popup').appendTo('body').append('<span class="close" />');
-			
-		},
-		showPopup: function(){
-			self.$popup.fadeIn();
+		showPopup: function(opt){
+			var newX = opt.x,
+				newY = opt.y;
+				
+			self.$popup.css({ top: newY-33, left: newX+17}).fadeIn(100);
 		},
 		
 		hidePopup: function(){
-			self.$popup.fadeOut();
+			self.$popup.fadeOut(100);
+			self.setCurTd(null);
 		},
+		setCurTd : function($tdElem){
+			self.$curTd = $tdElem;
+			self.$td.removeClass('active');
+			if(self.$curTd){
+				self.$curTd.addClass('active');
+			}
+			
+		}
 	}
 
 	calendObj.init();
