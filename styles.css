@@ -32,7 +32,7 @@ body{
 }
 
 .cal__popup{
-	width:300px;
+	
 	height:450px;
 	position:absolute;
 	background:#FFF;
@@ -62,13 +62,35 @@ body{
 }
 .cal__popup  input, .cal__popup  textarea{
 	display:block;
-	width:200px;	
-	display:none;
 	
+	display:none;
+	border:1px solid #a5a5a5;
+	border-radius:5px;	
+	outline:none;
+	line-height:25px;
+}
+.cal__popup  input{
+	height:25px;
+	
+	width:200px;	
+	padding:0;
+}
+.cal__popup  textarea{
+	height:200px;
+	resize: none;
+	width:196px;
+	padding:2px;
 }
 .cal__popup  .empty  input, .cal__popup  .empty textarea{
 	display:block;	
 }
+.cal__popup p span{
+	display:block;
+	width:202px;
+	height:27px;
+	line-height:25px;
+}
 .cal__popup .empty span{
 	display:none;
+	
 }
