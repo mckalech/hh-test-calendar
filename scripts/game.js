@@ -53,8 +53,7 @@ $.fn.calendar = function(){
 		init : function(){
 			self = this;
 			self.curDate = self.today;
-			self.fullContainer();
-			self.$td = self.$elem.find('.item');		
+			self.fullContainer();	
 			self.bindHandlers();
 		},
 		bindHandlers : function(){
@@ -75,6 +74,14 @@ $.fn.calendar = function(){
 			self.$td.live('click',function(e){
 				self.showPopup({x:e.clientX,y:e.clientY});
 				self.setCurTd($(this));
+				
+				//заполнение данными
+				self.$popup.find('.date span').text(self.$curTd.data('date'));
+				if(self.$curTd.hasClass('full')){				
+					self.$popup.find('.description').removeClass('empty').find('span').text(self.$curTd.data('info'));
+				}else{
+					self.$popup.find('.description').addClass('empty').find('span').text('');
+				}	
 			});
 			
 			self.$popup.find('.close').live('click',function(){
@@ -87,7 +94,7 @@ $.fn.calendar = function(){
 					$(this).parent().removeClass('empty').find('span').text(text);
 				}				
 			});
-			self.$popup.find('p span').live('click',function(){
+			self.$popup.find('.edit span').live('click',function(){
 				var text = $(this).text();
 				$(this).parent().addClass('empty').find('input, textarea').val(text).focus();
 			});
@@ -133,13 +140,16 @@ $.fn.calendar = function(){
 			//Смена названия месяца
 			self.$monthElem.text(self.months[self.curDate.getMonth()]);
 			
+			//перезаполнение переменой ячеек
+			self.$td = self.$elem.find('.item');	
+			
 		},
 		
 		showPopup: function(opt){
 			var newX = opt.x,
-				newY = opt.y;
-				
+				newY = opt.y;	
 			self.$popup.css({ top: newY-33, left: newX+17}).fadeIn(100);
+			
 		},
 		
 		hidePopup: function(){
