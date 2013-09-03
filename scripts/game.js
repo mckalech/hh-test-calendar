@@ -147,8 +147,10 @@ $.fn.calendar = function(){
 			var i = 0, j=0, d=1, dayText;	
 			
 			//создание таблицы и ее заполнение
-			self.$elem.html('<table id="main-table" cellspacing="0"></table>');
+			self.$elem.html('<table id="main-table" />');
 			for(i=0;i<self.curDate.weeksInMonth();i++){
+				
+				if(i>self.curDate.weeksInMonth()) break;
 				self.$elem.find('table').append('<tr />')
 				j = 0;
 				while(j<self.curDate.firstDayInMonth() && i==0) {					
@@ -156,10 +158,10 @@ $.fn.calendar = function(){
 					j++;
 				}
 				for(;j<7;j++,d++){
-				
-					if(d>self.curDate.daysInMonth()) break;
-					dayText =  i==0 ? self.days[j] +', '+ d : d;
-					$('<td>'+dayText+'</td>').attr('data-date',d).addClass('item').addClass(d==self.today.getDate() && self.curDate.getMonth()==self.today.getMonth() && self.curDate.getYear()==self.today.getYear() ? 'today' : '').appendTo(self.$elem.find('tr').last());
+					var newTd = $('<td />').appendTo(self.$elem.find('tr').last());
+					if(d>self.curDate.daysInMonth()) continue;					
+					dayText =  i==0 ? self.days[j] +', '+ d : d;					
+					newTd.append(d).attr('data-date',d).addClass('item').addClass(d==self.today.getDate() && self.curDate.getMonth()==self.today.getMonth() && self.curDate.getYear()==self.today.getYear() ? 'today' : '');
 					
 				}
 			}
@@ -175,7 +177,7 @@ $.fn.calendar = function(){
 			}
 			
 			//Смена названия месяца
-			self.$monthElem.text(self.months[self.curDate.getMonth()]);
+			self.$monthElem.text(self.months[self.curDate.getMonth()]+' '+self.curDate.getFullYear());
 			
 			//перезаполнение переменой ячеек
 			self.$td = self.$elem.find('.item');	
@@ -185,7 +187,7 @@ $.fn.calendar = function(){
 		showPopup: function(opt){
 			var newX = opt.x,
 				newY = opt.y;	
-			self.$popup.css({ top: newY-33, left: newX+17}).fadeIn(100);
+			self.$popup.css({ top: newY-30, left: newX+20}).fadeIn(100);
 			self.$warning.removeClass('visible');
 			
 		},

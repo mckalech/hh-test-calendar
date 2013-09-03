@@ -3,6 +3,7 @@ body{
 }
 #main-table{
 	margin-top:20px;
+	border-collapse:collapse;
 }
 
 #main-table td{
@@ -18,17 +19,18 @@ body{
 #main-table .item:hover{
 	background:#a5dd0f;
 	cursor:pointer;
-	border-color:black;
-}
-#main-table td.today{
 	
-	background:blue !important;
+}
+#main-table .item.today{
+	
+	background:#e1dd8f ;
+	font-weight:bold;
 }
 #main-table td.full{
 	background:#a5a5a5;
 }
-.container #main-table td.active{
-	background:red !important;
+ #main-table td.item.active{
+	background:red ;
 }
 #main-table td p{
 	margin:5px 0;
