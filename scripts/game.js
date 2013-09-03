@@ -21,14 +21,17 @@ var info = {
 	2013:{
 		7:{
 			14:{
+				name:"222",
 				text:"dasdas"
 			},
 			16:{
+				name:"223",
 				text:"dddd"
 			}
 		},
 		8:{
 			1:{
+				name:"День знаний!",
 				text:"hello, world"
 			}
 		}
@@ -45,6 +48,8 @@ $.fn.calendar = function(){
 		months : ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
 		$prevBtn : $('.prev'),
 		$nextBtn : $('.next'),
+		$saveBtn : $('.save'),
+		$warning : $('.warning'),
 		$monthElem : $('.month'),
 		$popup : $('.cal__popup'), 
 		$elem : $(this),
@@ -52,7 +57,7 @@ $.fn.calendar = function(){
 		$curTd : null,
 		init : function(){
 			self = this;
-			self.curDate = self.today;
+			self.curDate = new Date();
 			self.fullContainer();	
 			self.bindHandlers();
 		},
@@ -66,23 +71,9 @@ $.fn.calendar = function(){
 				self.nextMonth();
 				self.hidePopup();
 				self.fullContainer();
-			});
-			self.$elem.find('.full').live('click',function(){
-				//alert($(this).attr('data-info'));
+			});	
+
 			
-			});
-			self.$td.live('click',function(e){
-				self.showPopup({x:e.clientX,y:e.clientY});
-				self.setCurTd($(this));
-				
-				//заполнение данными
-				self.$popup.find('.date span').text(self.$curTd.data('date'));
-				if(self.$curTd.hasClass('full')){				
-					self.$popup.find('.description').removeClass('empty').find('span').text(self.$curTd.data('info'));
-				}else{
-					self.$popup.find('.description').addClass('empty').find('span').text('');
-				}	
-			});
 			
 			self.$popup.find('.close').live('click',function(){
 				self.hidePopup();
@@ -99,7 +90,50 @@ $.fn.calendar = function(){
 				$(this).parent().addClass('empty').find('input, textarea').val(text).focus();
 			});
 			
+			self.$td.live('click',function(e){
+				self.showPopup({x:e.clientX,y:e.clientY});
+				self.setCurTd($(this));
+				
+				//заполнение данными
+				self.$popup.find('.date span').text(self.$curTd.data('date'));
+				
+				if(self.$curTd.hasClass('full')){				
+					self.$popup.find('.description').removeClass('empty').find('span').text(self.$curTd.data('info'));
+					self.$popup.find('.name').removeClass('empty').find('span').text(self.$curTd.data('name'));
+				}else{
+					self.$popup.find('.description, .name').addClass('empty').find('span').text('');
+					self.$popup.find('input, textarea').val('');
+				}	
+			});
 			
+			self.$saveBtn.on('click',function(){
+			
+				if(self.$popup.find('.description').find('span').text() && self.$popup.find('.name').find('span').text()){
+				
+					self.$curTd
+							.attr('data-info',self.$popup.find('.description').find('span').text())
+							.attr('data-name',self.$popup.find('.name').find('span').text())
+							.addClass('full')
+							.append('<p />').find('p').text(self.$popup.find('.name').find('span').text());
+					
+					var date = self.$curTd.attr('data-date');
+					
+					if(! info[self.curDate.getFullYear()]){ info[self.curDate.getFullYear()] = {}; }
+					if(! info[self.curDate.getFullYear()][self.curDate.getMonth()]){ info[self.curDate.getFullYear()][self.curDate.getMonth()] = {}; }
+					info[self.curDate.getFullYear()][self.curDate.getMonth()][date]={};
+					
+					info[self.curDate.getFullYear()][self.curDate.getMonth()][date].text = self.$curTd.attr('data-info');
+					info[self.curDate.getFullYear()][self.curDate.getMonth()][date].name = self.$curTd.attr('data-name');
+					
+					self.$popup.find('input, textarea').val('');
+					
+					self.hidePopup();
+				}
+				else{
+					self.$warning.addClass('visible');
+				}
+						
+			});	
 				
 		},
 		prevMonth : function(){
@@ -125,7 +159,7 @@ $.fn.calendar = function(){
 				
 					if(d>self.curDate.daysInMonth()) break;
 					dayText =  i==0 ? self.days[j] +', '+ d : d;
-					$('<td>'+dayText+'</td>').attr('data-date',d).addClass('item').addClass(d==self.today.getDate() ? 'today' : '').appendTo(self.$elem.find('tr').last());
+					$('<td>'+dayText+'</td>').attr('data-date',d).addClass('item').addClass(d==self.today.getDate() && self.curDate.getMonth()==self.today.getMonth() && self.curDate.getYear()==self.today.getYear() ? 'today' : '').appendTo(self.$elem.find('tr').last());
 					
 				}
 			}
@@ -133,7 +167,10 @@ $.fn.calendar = function(){
 			//наполение информацией
 			if( info[self.curDate.getFullYear()]&& info[self.curDate.getFullYear()][self.curDate.getMonth()] ){
 				for(var num in info[self.curDate.getFullYear()][self.curDate.getMonth()]){
-					self.$elem.find('td[data-date="'+num+'"]').attr('data-info',info[self.curDate.getFullYear()][self.curDate.getMonth()][num].text).addClass('full');
+					self.$elem.find('td[data-date="'+num+'"]')
+						.attr('data-info',info[self.curDate.getFullYear()][self.curDate.getMonth()][num].text)
+						.attr('data-name',info[self.curDate.getFullYear()][self.curDate.getMonth()][num].name)
+						.addClass('full').append('<p />').find('p').text(info[self.curDate.getFullYear()][self.curDate.getMonth()][num].name);
 				}
 			}
 			
@@ -149,6 +186,7 @@ $.fn.calendar = function(){
 			var newX = opt.x,
 				newY = opt.y;	
 			self.$popup.css({ top: newY-33, left: newX+17}).fadeIn(100);
+			self.$warning.removeClass('visible');
 			
 		},
 		

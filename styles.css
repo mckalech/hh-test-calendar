@@ -12,6 +12,7 @@ body{
 	font-size:12px;
 	vertical-align:top;
 	border:1px solid #e2e2e2;
+	overflow:hidden;
 }
 
 #main-table .item:hover{
@@ -19,12 +20,24 @@ body{
 	cursor:pointer;
 	border-color:black;
 }
+#main-table td.today{
+	
+	background:blue !important;
+}
 #main-table td.full{
 	background:#a5a5a5;
 }
 .container #main-table td.active{
-	background:red;
+	background:red !important;
 }
+#main-table td p{
+	margin:5px 0;
+}
+
+
+
+
+
 .header span{
 	cursor:pointer;
 	margin-left:20px;
@@ -33,10 +46,10 @@ body{
 
 .cal__popup{
 	
-	height:450px;
+	
 	position:absolute;
 	background:#FFF;
-	box-shadow:1px 3px 2px #666666, 0px -1px 2px #666666;;
+	box-shadow:1px 3px 2px #666666, 0px -1px 2px #666666;
 	border-radius:5px;
 	display:none;
 	padding:20px;
@@ -90,7 +103,26 @@ body{
 	height:27px;
 	line-height:25px;
 }
-.cal__popup .empty span{
-	display:none;
-	
+.cal__popup .description span{
+	display:block;
+	width:202px;
+	height:206px;
+	line-height:25px;
 }
+.cal__popup .empty span{
+	display:none;	
+}
+.cal__popup .save{
+	cursor:pointer;
+	text-decoration:underline;
+}
+.cal__popup .warning{
+	color:red;
+	display:none;
+	font-size:12px;
+}
+.cal__popup .warning.visible{
+	
+	display:block;
+}
+
