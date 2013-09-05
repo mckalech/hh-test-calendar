@@ -118,6 +118,9 @@ body{
 	cursor:pointer;
 	text-decoration:underline;
 }
+.cal__popup .warning-wrapper{
+	height:25px;
+}
 .cal__popup .warning{
 	color:red;
 	display:none;

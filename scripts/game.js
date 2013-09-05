@@ -17,26 +17,7 @@ Date.prototype.getNormalDay = function() {
 	return this.getDay()>0 ? this.getDay()-1 : 6;
 };
 
-var info = {
-	2013:{
-		7:{
-			14:{
-				name:"222",
-				text:"dasdas"
-			},
-			16:{
-				name:"223",
-				text:"dddd"
-			}
-		},
-		8:{
-			1:{
-				name:"День знаний!",
-				text:"hello, world"
-			}
-		}
-	}
-}
+
 
 $.fn.calendar = function(){
 	
@@ -44,11 +25,13 @@ $.fn.calendar = function(){
 		self :null,
 		today : new Date(),
 		curDate : null,
+		info:{},
 		days : ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
 		months : ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
 		$prevBtn : $('.prev'),
 		$nextBtn : $('.next'),
 		$saveBtn : $('.save'),
+		$todayBtn : $('.today-btn'),
 		$warning : $('.warning'),
 		$monthElem : $('.month'),
 		$popup : $('.cal__popup'), 
@@ -57,6 +40,7 @@ $.fn.calendar = function(){
 		$curTd : null,
 		init : function(){
 			self = this;
+			self.fullInfo();
 			self.curDate = new Date();
 			self.fullContainer();	
 			self.bindHandlers();
@@ -73,9 +57,13 @@ $.fn.calendar = function(){
 				self.fullContainer();
 			});	
 
+			self.$todayBtn.on('click',function(){
+				self.curDate.setMonth(self.today.getMonth());
+				self.hidePopup();
+				self.fullContainer();
+			});	
 			
-			
-			self.$popup.find('.close').live('click',function(){
+			self.$popup.find('.close, .cancel').live('click',function(){
 				self.hidePopup();
 			});
 			
@@ -95,11 +83,11 @@ $.fn.calendar = function(){
 				self.setCurTd($(this));
 				
 				//заполнение данными
-				self.$popup.find('.date span').text(self.$curTd.data('date'));
+				self.$popup.find('.date span').text(self.$curTd.attr('data-date')+'.'+(self.curDate.getMonth()+1)+'.'+self.curDate.getFullYear());
 				
 				if(self.$curTd.hasClass('full')){				
-					self.$popup.find('.description').removeClass('empty').find('span').text(self.$curTd.data('info'));
-					self.$popup.find('.name').removeClass('empty').find('span').text(self.$curTd.data('name'));
+					self.$popup.find('.description').removeClass('empty').find('span').text(self.$curTd.attr('data-descr'));
+					self.$popup.find('.name').removeClass('empty').find('span').text(self.$curTd.attr('data-name'));
 				}else{
 					self.$popup.find('.description, .name').addClass('empty').find('span').text('');
 					self.$popup.find('input, textarea').val('');
@@ -111,19 +99,12 @@ $.fn.calendar = function(){
 				if(self.$popup.find('.description').find('span').text() && self.$popup.find('.name').find('span').text()){
 				
 					self.$curTd
-							.attr('data-info',self.$popup.find('.description').find('span').text())
+							.attr('data-descr',self.$popup.find('.description').find('span').text())
 							.attr('data-name',self.$popup.find('.name').find('span').text())
 							.addClass('full')
-							.append('<p />').find('p').text(self.$popup.find('.name').find('span').text());
+							.find('p').text(self.$popup.find('.name').find('span').text());
 					
-					var date = self.$curTd.attr('data-date');
-					
-					if(! info[self.curDate.getFullYear()]){ info[self.curDate.getFullYear()] = {}; }
-					if(! info[self.curDate.getFullYear()][self.curDate.getMonth()]){ info[self.curDate.getFullYear()][self.curDate.getMonth()] = {}; }
-					info[self.curDate.getFullYear()][self.curDate.getMonth()][date]={};
-					
-					info[self.curDate.getFullYear()][self.curDate.getMonth()][date].text = self.$curTd.attr('data-info');
-					info[self.curDate.getFullYear()][self.curDate.getMonth()][date].name = self.$curTd.attr('data-name');
+					self.saveInfo();
 					
 					self.$popup.find('input, textarea').val('');
 					
@@ -142,6 +123,23 @@ $.fn.calendar = function(){
 		nextMonth : function(){
 			self.curDate.setMonth(self.curDate.getMonth()+1);
 		}, 
+		fullInfo : function(){
+			if(localStorage['info']){
+				self.info=JSON.parse(localStorage['info']);
+			}
+		},
+		saveInfo : function(){
+			var date = self.$curTd.attr('data-date');
+					
+			if(! self.info[self.curDate.getFullYear()]){ self.info[self.curDate.getFullYear()] = {}; }
+			if(! self.info[self.curDate.getFullYear()][self.curDate.getMonth()]){ self.info[self.curDate.getFullYear()][self.curDate.getMonth()] = {}; }
+			self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date]={};
+			
+			self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date].descr = self.$curTd.attr('data-descr');
+			self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date].name = self.$curTd.attr('data-name');
+
+			localStorage['info']=JSON.stringify(self.info);
+		},
 		fullContainer : function(){
 
 			var i = 0, j=0, d=1, dayText;	
@@ -161,18 +159,18 @@ $.fn.calendar = function(){
 					var newTd = $('<td />').appendTo(self.$elem.find('tr').last());
 					if(d>self.curDate.daysInMonth()) continue;					
 					dayText =  i==0 ? self.days[j] +', '+ d : d;					
-					newTd.append(d).attr('data-date',d).addClass('item').addClass(d==self.today.getDate() && self.curDate.getMonth()==self.today.getMonth() && self.curDate.getYear()==self.today.getYear() ? 'today' : '');
+					newTd.append('<div class="date">'+dayText+'</div><p></p>').attr('data-date',d).addClass('item').addClass(d==self.today.getDate() && self.curDate.getMonth()==self.today.getMonth() && self.curDate.getYear()==self.today.getYear() ? 'today' : '');
 					
 				}
 			}
 			
 			//наполение информацией
-			if( info[self.curDate.getFullYear()]&& info[self.curDate.getFullYear()][self.curDate.getMonth()] ){
-				for(var num in info[self.curDate.getFullYear()][self.curDate.getMonth()]){
+			if( self.info[self.curDate.getFullYear()]&& self.info[self.curDate.getFullYear()][self.curDate.getMonth()] ){
+				for(var num in self.info[self.curDate.getFullYear()][self.curDate.getMonth()]){
 					self.$elem.find('td[data-date="'+num+'"]')
-						.attr('data-info',info[self.curDate.getFullYear()][self.curDate.getMonth()][num].text)
-						.attr('data-name',info[self.curDate.getFullYear()][self.curDate.getMonth()][num].name)
-						.addClass('full').append('<p />').find('p').text(info[self.curDate.getFullYear()][self.curDate.getMonth()][num].name);
+						.attr('data-descr',self.info[self.curDate.getFullYear()][self.curDate.getMonth()][num].descr)
+						.attr('data-name',self.info[self.curDate.getFullYear()][self.curDate.getMonth()][num].name)
+						.addClass('full').find('p').text(self.info[self.curDate.getFullYear()][self.curDate.getMonth()][num].name);
 				}
 			}
 			
