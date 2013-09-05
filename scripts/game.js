@@ -145,14 +145,14 @@ $.fn.calendar = function(){
 			var i = 0, j=0, d=1, dayText;	
 			
 			//создание таблицы и ее заполнение
-			self.$elem.html('<table id="main-table" />');
+			self.$elem.html('<table id="main-table" cellpadding=0 cellspacing=0 />');
 			for(i=0;i<self.curDate.weeksInMonth();i++){
 				
 				if(i>self.curDate.weeksInMonth()) break;
 				self.$elem.find('table').append('<tr />')
 				j = 0;
 				while(j<self.curDate.firstDayInMonth() && i==0) {					
-					self.$elem.find('tr').append('<td>'+self.days[j]+'</td');
+					self.$elem.find('tr').append('<td><div class="date">'+self.days[j]+'</div></td');
 					j++;
 				}
 				for(;j<7;j++,d++){
