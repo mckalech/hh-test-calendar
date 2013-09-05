@@ -31,6 +31,7 @@ $.fn.calendar = function(){
 		$prevBtn : $('.prev'),
 		$nextBtn : $('.next'),
 		$saveBtn : $('.save'),
+		$delBtn : $('.delete'),
 		$todayBtn : $('.today-btn'),
 		$warning : $('.warning'),
 		$monthElem : $('.month'),
@@ -65,7 +66,8 @@ $.fn.calendar = function(){
 				self.fullContainer();
 			});	
 			
-			self.$popup.find('.close, .cancel').live('click',function(){
+			
+			self.$popup.find('.close').live('click',function(){
 				self.hidePopup();
 			});
 			
@@ -104,9 +106,10 @@ $.fn.calendar = function(){
 							.attr('data-descr',self.$popup.find('.description').find('span').text())
 							.attr('data-name',self.$popup.find('.name').find('span').text())
 							.addClass('full')
-							.find('p').text(self.$popup.find('.name').find('span').text());
+							.find('.name').text(self.$popup.find('.name').find('span').text())
+							.siblings('.descr').text(self.$popup.find('.description').find('span').text());
 					
-					self.saveInfo();
+					self.saveInfo(true);
 					
 					self.$popup.find('input, textarea').val('');
 					
@@ -117,6 +120,19 @@ $.fn.calendar = function(){
 				}
 						
 			});	
+			
+			self.$delBtn.on('click',function(){
+				self.$curTd
+							.removeAttr('data-descr')
+							.removeAttr('data-name')
+							.removeClass('full')
+							.find('p').text('');
+				
+				self.$popup.find('input, textarea').val('');
+					
+				self.saveInfo();
+				self.hidePopup();
+			});
 				
 		},
 		prevMonth : function(){
@@ -130,16 +146,19 @@ $.fn.calendar = function(){
 				self.info=JSON.parse(localStorage['info']);
 			}
 		},
-		saveInfo : function(){
+		saveInfo : function(save){
 			var date = self.$curTd.attr('data-date');
-					
-			if(! self.info[self.curDate.getFullYear()]){ self.info[self.curDate.getFullYear()] = {}; }
-			if(! self.info[self.curDate.getFullYear()][self.curDate.getMonth()]){ self.info[self.curDate.getFullYear()][self.curDate.getMonth()] = {}; }
-			self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date]={};
+				
+			if(save){
+				if(! self.info[self.curDate.getFullYear()]){ self.info[self.curDate.getFullYear()] = {}; }
+				if(! self.info[self.curDate.getFullYear()][self.curDate.getMonth()]){ self.info[self.curDate.getFullYear()][self.curDate.getMonth()] = {}; }
+				self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date]={};
 			
-			self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date].descr = self.$curTd.attr('data-descr');
-			self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date].name = self.$curTd.attr('data-name');
-
+				self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date].descr = self.$curTd.attr('data-descr');
+				self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date].name = self.$curTd.attr('data-name');
+			}else{
+				delete self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date];
+			}
 			localStorage['info']=JSON.stringify(self.info);
 		},
 		fullContainer : function(){
@@ -154,14 +173,14 @@ $.fn.calendar = function(){
 				self.$elem.find('table').append('<tr />')
 				j = 0;
 				while(j<self.curDate.firstDayInMonth() && i==0) {					
-					self.$elem.find('tr').append('<td><div class="date">'+self.days[j]+'</div></td');
+					self.$elem.find('tr').append('<td><div class="date">'+self.days[j]+'</div></td>');
 					j++;
 				}
 				for(;j<7;j++,d++){
 					var newTd = $('<td />').appendTo(self.$elem.find('tr').last());
 					if(d>self.curDate.daysInMonth()) continue;					
 					dayText =  i==0 ? self.days[j] +', '+ d : d;					
-					newTd.append('<div class="date">'+dayText+'</div><p></p>').attr('data-date',d).addClass('item').addClass(d==self.today.getDate() && self.curDate.getMonth()==self.today.getMonth() && self.curDate.getYear()==self.today.getYear() ? 'today' : '');
+					newTd.append('<div class="date">'+dayText+'</div><p class="name"></p><p class="descr"></p>').attr('data-date',d).addClass('item').addClass(d==self.today.getDate() && self.curDate.getMonth()==self.today.getMonth() && self.curDate.getYear()==self.today.getYear() ? 'today' : '');
 					
 				}
 			}
@@ -172,7 +191,8 @@ $.fn.calendar = function(){
 					self.$elem.find('td[data-date="'+num+'"]')
 						.attr('data-descr',self.info[self.curDate.getFullYear()][self.curDate.getMonth()][num].descr)
 						.attr('data-name',self.info[self.curDate.getFullYear()][self.curDate.getMonth()][num].name)
-						.addClass('full').find('p').text(self.info[self.curDate.getFullYear()][self.curDate.getMonth()][num].name);
+						.addClass('full').find('.name').text(self.info[self.curDate.getFullYear()][self.curDate.getMonth()][num].name)
+						.siblings('.descr').text(self.info[self.curDate.getFullYear()][self.curDate.getMonth()][num].descr);
 				}
 			}
 			

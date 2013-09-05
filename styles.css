@@ -42,7 +42,10 @@ body{
 	color:#999999;
 }
 #main-table td p{
-	margin:5px 0;
+	margin:3px 0;
+	
+}
+#main-table td p.name{
 	font-weight:bold;
 }
 
@@ -141,20 +144,28 @@ body{
 	cursor:pointer;
 	line-height:12px;
 }
+.cal__popup p {
+	margin:10px 0;
+}
+.cal__popup p.date span{
+	
+	height:20px;
+}
 .cal__popup  input, .cal__popup  textarea{
 	display:block;
 	
 	display:none;
-	border:1px solid #a5a5a5;
-	border-radius:5px;	
+	border:1px solid #d2d2d2;
+	border-radius:3px;	
 	outline:none;
 	line-height:25px;
+	box-shadow:inset 1px 2px 2px #a5a5a5;
 }
 .cal__popup  input{
 	height:25px;
 	
-	width:200px;	
-	padding:0;
+	width:198px;	
+	padding:0 0 0 2px;
 }
 .cal__popup  textarea{
 	height:200px;
@@ -176,13 +187,25 @@ body{
 	width:202px;
 	height:206px;
 	line-height:25px;
+
 }
 .cal__popup .empty span{
 	display:none;	
 }
 .cal__popup .save{
 	cursor:pointer;
-	text-decoration:underline;
+	border:1px solid #d2d2d2;
+	padding:2px 4px;
+	border-radius:3px;
+	float:left;
+}
+.cal__popup .delete{
+	cursor:pointer;
+	border:1px solid #d2d2d2;
+	padding:2px 4px;
+	border-radius:3px;
+	float:right;
+	background:#f0b5b5;
 }
 .cal__popup .warning-wrapper{
 	height:25px;
@@ -190,7 +213,7 @@ body{
 .cal__popup .warning{
 	color:red;
 	display:none;
-	font-size:12px;
+	font-size:11px;
 }
 .cal__popup .warning.visible{
 	
