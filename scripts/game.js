@@ -55,10 +55,12 @@ $.fn.calendar = function(){
 				self.nextMonth();
 				self.hidePopup();
 				self.fullContainer();
+				
 			});	
 
 			self.$todayBtn.on('click',function(){
 				self.curDate.setMonth(self.today.getMonth());
+				self.curDate.setYear(self.today.getFullYear());
 				self.hidePopup();
 				self.fullContainer();
 			});	

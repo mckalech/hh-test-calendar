@@ -1,9 +1,10 @@
 body{
 	margin:0;
 	padding:0;
+	font-family:Arial;
 }
 #main-table{
-	margin:20px;
+	margin-top:20px;
 }
 
 #main-table td{
@@ -38,7 +39,7 @@ body{
 	border-color:#8abfe9;
 }
 #main-table td .date{
-	color:#a9a9a9;
+	color:#999999;
 }
 #main-table td p{
 	margin:5px 0;
@@ -58,11 +59,57 @@ body{
 	box-shadow:0px 3px 3px #b7b7b7;
 	margin-bottom:20px;
 }
-
-.header span{
+.header {
+	
+}
+.header .nav{
 	cursor:pointer;
-	margin-left:20px;
-	text-decoration:underline;
+	width:15px;
+	height:15px;
+	display:inline-block;
+	border:1px solid #a6a6a6;
+	border-radius:2px;
+	position:relative;
+}
+.header .nav:after{
+	content: "";
+	width: 0px;
+	height: 0px;
+	border: 4px solid transparent;
+	
+	position: absolute;
+	top:4px;
+	
+}
+.header .nav.next:after{
+	border-left-color: #a5a5a5;
+	left:6px;
+}
+.header .nav.prev:after{
+	border-right-color: #a5a5a5;
+	left:1px;
+}
+.header .month{	
+	display: inline-block;
+	line-height: 18px;
+	vertical-align: top;
+	font-size: 14px;
+	width:110px;
+	text-align:center;
+}
+
+
+.header .today-btn{
+	cursor:pointer;
+	height:15px;
+	display:inline-block;
+	border:1px solid #a6a6a6;
+	border-radius:2px;
+	font-size:12px;
+	padding:0 3px;
+	margin-left:10px;
+	vertical-align: top;
+	color:#555555;
 }
 
 .cal__popup{
