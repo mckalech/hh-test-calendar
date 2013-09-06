@@ -148,13 +148,16 @@ $.fn.calendar = function(){
 		},
 		saveInfo : function(save){
 			var date = self.$curTd.attr('data-date');
-			var key=date+'-'+self.curDate.getMonth()+'-'+self.curDate.getFullYear();	
+				
 			if(save){
-				self.info[key]={};
-				self.info[key].descr = self.$curTd.attr('data-descr');
-				self.info[key].name = self.$curTd.attr('data-name');
+				if(! self.info[self.curDate.getFullYear()]){ self.info[self.curDate.getFullYear()] = {}; }
+				if(! self.info[self.curDate.getFullYear()][self.curDate.getMonth()]){ self.info[self.curDate.getFullYear()][self.curDate.getMonth()] = {}; }
+				self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date]={};
+			
+				self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date].descr = self.$curTd.attr('data-descr');
+				self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date].name = self.$curTd.attr('data-name');
 			}else{
-				delete self.info[key];
+				delete self.info[self.curDate.getFullYear()][self.curDate.getMonth()][date];
 			}
 			localStorage['info']=JSON.stringify(self.info);
 		},
@@ -183,22 +186,15 @@ $.fn.calendar = function(){
 			}
 			
 			//наполение информацией
-			
-			for(var key in self.info){
-				
-				var dateMas = key.split('-'), 
-				d = dateMas[0],
-				m = dateMas[1]
-				y = dateMas[2];	
-				if(self.info[key] && self.curDate.getMonth()==m && self.curDate.getFullYear()==y){
-					self.$elem.find('td[data-date="'+d+'"]')
-						.attr('data-descr',self.info[key].descr)
-						.attr('data-name',self.info[key].name)
-						.addClass('full').find('.name').text(self.info[key].name)
-						.siblings('.descr').text(self.info[key].descr);
+			if( self.info[self.curDate.getFullYear()]&& self.info[self.curDate.getFullYear()][self.curDate.getMonth()] ){
+				for(var num in self.info[self.curDate.getFullYear()][self.curDate.getMonth()]){
+					self.$elem.find('td[data-date="'+num+'"]')
+						.attr('data-descr',self.info[self.curDate.getFullYear()][self.curDate.getMonth()][num].descr)
+						.attr('data-name',self.info[self.curDate.getFullYear()][self.curDate.getMonth()][num].name)
+						.addClass('full').find('.name').text(self.info[self.curDate.getFullYear()][self.curDate.getMonth()][num].name)
+						.siblings('.descr').text(self.info[self.curDate.getFullYear()][self.curDate.getMonth()][num].descr);
 				}
 			}
-			
 			
 			//Смена названия месяца
 			self.$monthElem.text(self.months[self.curDate.getMonth()]+' '+self.curDate.getFullYear());

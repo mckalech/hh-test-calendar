@@ -143,12 +143,13 @@ body{
 	right:10px;
 	cursor:pointer;
 	line-height:12px;
+	font-size:13px;
 }
 .cal__popup p {
 	margin:10px 0;
 }
 .cal__popup p.date span{
-	
+	font-size:14px;
 	height:20px;
 }
 .cal__popup  input, .cal__popup  textarea{
@@ -198,6 +199,8 @@ body{
 	padding:2px 4px;
 	border-radius:3px;
 	float:left;
+	
+	background:#b5f0b5;
 }
 .cal__popup .delete{
 	cursor:pointer;
