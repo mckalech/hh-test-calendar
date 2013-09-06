@@ -32,6 +32,8 @@ $.fn.calendar = function(){
 		$nextBtn : $('.next'),
 		$saveBtn : $('.save'),
 		$delBtn : $('.delete'),
+		$searchQ : $('.search'),
+		$searchSug : $('.sug'),
 		$todayBtn : $('.today-btn'),
 		$warning : $('.warning'),
 		$monthElem : $('.month'),
@@ -65,6 +67,22 @@ $.fn.calendar = function(){
 				self.hidePopup();
 				self.fullContainer();
 			});	
+			
+			
+			self.$searchQ.bind('keyup',function(){
+				var query=$(this).val();
+				if(query.length>3){
+					var suggests=[];
+					self.$searchSug.text();
+					$.each(self.info,function(index,value){
+						if( value.descr.indexOf(query)>=0){
+							suggests.push(value);
+							self.$searchSug.text(suggests[0].name);
+						}
+					});
+				}
+				
+			});
 			
 			
 			self.$popup.find('.close').live('click',function(){
