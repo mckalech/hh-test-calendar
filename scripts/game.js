@@ -71,13 +71,14 @@ $.fn.calendar = function(){
 			
 			self.$searchQ.bind('keyup',function(){
 				var query=$(this).val();
-				if(query.length>3){
+				self.$searchSug.html('');
+				if(query.length>2){
 					var suggests=[];
-					self.$searchSug.text();
+					self.$searchSug.html('');
 					$.each(self.info,function(index,value){
 						if( value.descr.indexOf(query)>=0){
 							suggests.push(value);
-							self.$searchSug.text(suggests[0].name);
+							self.$searchSug.append('<li>'+value.name+'</li>');
 						}
 					});
 				}

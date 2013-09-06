@@ -62,6 +62,40 @@ body{
 	box-shadow:0px 3px 3px #b7b7b7;
 	margin-bottom:20px;
 }
+.top .search-block{
+	position:relative;
+}
+
+.top .search{
+	margin:0;
+	border:none;
+	outline:none;
+	width:200px;
+}
+.top  .sug{
+	position:absolute;
+	top:100%;
+	left:0;
+	width:200px;
+	padding:0;
+	margin:0;
+	background:#a6a6a6;
+	z-index:100;
+}
+.top  .sug li{
+	display:block;
+	height:20px;
+	border:1px solid black;
+	border-top:none;
+}
+.top  .sug li:hover{
+	cursor:pointer;
+	background:yellow;
+}
+
+
+
+
 .header {
 	
 }
