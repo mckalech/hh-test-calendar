@@ -16,7 +16,9 @@ Date.prototype.firstDayInMonth = function() {
 Date.prototype.getNormalDay = function() {
 	return this.getDay()>0 ? this.getDay()-1 : 6;
 };
-
+String.prototype.replaceAll = function(search, replace){
+  return this.split(search).join(replace);
+}
 
 
 $.fn.calendar = function(){
@@ -70,21 +72,33 @@ $.fn.calendar = function(){
 			
 			
 			self.$searchQ.bind('keyup',function(){
-				var query=$(this).val();
+				var query=$(this).val(),
+				replStr;
 				self.$searchSug.html('');
 				if(query.length>2){
-					var suggests=[];
 					self.$searchSug.html('');
 					$.each(self.info,function(index,value){
-						if( value.descr.indexOf(query)>=0){
-							suggests.push(value);
-							self.$searchSug.append('<li>'+value.name+'</li>');
+						
+						if( value.descr.toLowerCase().indexOf(query.toLowerCase())>=0){
+							replStr = value.descr.replaceAll(query,"<b>"+query+"</b>")
+							self.$searchSug.append('<li data-date='+index+'>'+replStr+'</li>');
+						}
+						else if( value.name.indexOf(query)>=0){
+							replStr = value.name.replaceAll(query,"<b>"+query+"</b>")
+							self.$searchSug.append('<li data-date='+index+'>'+replStr+'</li>');
 						}
 					});
 				}
 				
 			});
 			
+			self.$searchSug.find('li').live('click',function(){
+				var dateMas=$(this).attr('data-date').split('-');
+				self.curDate.setMonth(dateMas[1]);
+				self.curDate.setYear(dateMas[2]);
+				self.fullContainer();
+				self.$searchSug.html('');
+			});
 			
 			self.$popup.find('.close').live('click',function(){
 				self.hidePopup();
@@ -207,7 +221,7 @@ $.fn.calendar = function(){
 				
 				var dateMas = key.split('-'), 
 				d = dateMas[0],
-				m = dateMas[1]
+				m = dateMas[1],
 				y = dateMas[2];	
 				if(self.info[key] && self.curDate.getMonth()==m && self.curDate.getFullYear()==y){
 					self.$elem.find('td[data-date="'+d+'"]')

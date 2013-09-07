@@ -87,6 +87,8 @@ body{
 	height:20px;
 	border:1px solid black;
 	border-top:none;
+	overflow:hidden;
+	
 }
 .top  .sug li:hover{
 	cursor:pointer;
