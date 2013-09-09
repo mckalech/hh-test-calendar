@@ -73,23 +73,35 @@ $.fn.calendar = function(){
 			
 			self.$searchQ.bind('keyup',function(){
 				var query=$(this).val(),
+				isWords=false,
 				replStr;
 				self.$searchSug.html('');
 				if(query.length>2){
-					self.$searchSug.html('');
+					self.$searchSug.show();
+					isWords = false;
 					$.each(self.info,function(index,value){
 						
 						if( value.descr.toLowerCase().indexOf(query.toLowerCase())>=0){
 							replStr = value.descr.replaceAll(query,"<b>"+query+"</b>")
 							self.$searchSug.append('<li data-date='+index+'>'+replStr+'</li>');
+							isWords=true;
 						}
 						else if( value.name.indexOf(query)>=0){
 							replStr = value.name.replaceAll(query,"<b>"+query+"</b>")
 							self.$searchSug.append('<li data-date='+index+'>'+replStr+'</li>');
+							isWords=true;
 						}
 					});
+					
+					if(!isWords) { self.$searchSug.hide(); }
+				}else{
+					self.$searchSug.hide();
 				}
 				
+			});
+			
+			self.$searchQ.bind('blur',function(){
+				self.$searchSug.hide();		
 			});
 			
 			self.$searchSug.find('li').live('click',function(){
@@ -97,7 +109,7 @@ $.fn.calendar = function(){
 				self.curDate.setMonth(dateMas[1]);
 				self.curDate.setYear(dateMas[2]);
 				self.fullContainer();
-				self.$searchSug.html('');
+				self.$searchSug.html('').hide();
 			});
 			
 			self.$popup.find('.close').live('click',function(){
