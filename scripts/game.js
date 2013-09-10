@@ -22,9 +22,10 @@ String.prototype.replaceAll = function(search, replace){
 
 
 $.fn.calendar = function(){
-	
-	var calendObj = {
-		self :null,
+
+	var self  = null,
+	calendObj = {
+		
 		today : new Date(),
 		curDate : null,
 		info:{},
@@ -107,6 +108,7 @@ $.fn.calendar = function(){
 				self.curDate.setYear(dateMas[2]);
 				self.fullContainer();
 				self.$searchSug.html('').hide();
+				self.$searchQ.val('');
 			});
 			
 			self.$searchQ.bind('blur',function(){
