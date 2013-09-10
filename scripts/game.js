@@ -30,6 +30,7 @@ $.fn.calendar = function(){
 		info:{},
 		days : ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
 		months : ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+		monthSklon : ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
 		$prevBtn : $('.prev'),
 		$nextBtn : $('.next'),
 		$saveBtn : $('.save'),
@@ -83,12 +84,12 @@ $.fn.calendar = function(){
 						
 						if( value.descr.toLowerCase().indexOf(query.toLowerCase())>=0){
 							replStr = value.descr.replaceAll(query,"<b>"+query+"</b>")
-							self.$searchSug.append('<li data-date='+index+'>'+replStr+'</li>');
+							self.$searchSug.append('<li data-date='+index+'><p>'+replStr+'</p><span>'+index.split('-')[0]+' '+self.monthSklon[index.split('-')[1]]+'</span></li>');
 							isWords=true;
 						}
 						else if( value.name.indexOf(query)>=0){
 							replStr = value.name.replaceAll(query,"<b>"+query+"</b>")
-							self.$searchSug.append('<li data-date='+index+'>'+replStr+'</li>');
+							self.$searchSug.append('<li data-date='+index+'><p>'+replStr+'</p><span>'+index.split('-')[0]+' '+self.monthSklon[index.split('-')[1]]+'</span></li>');
 							isWords=true;
 						}
 					});
@@ -100,16 +101,16 @@ $.fn.calendar = function(){
 				
 			});
 			
-			self.$searchQ.bind('blur',function(){
-				self.$searchSug.hide();		
-			});
-			
 			self.$searchSug.find('li').live('click',function(){
 				var dateMas=$(this).attr('data-date').split('-');
 				self.curDate.setMonth(dateMas[1]);
 				self.curDate.setYear(dateMas[2]);
 				self.fullContainer();
 				self.$searchSug.html('').hide();
+			});
+			
+			self.$searchQ.bind('blur',function(){
+				//self.$searchSug.hide();		
 			});
 			
 			self.$popup.find('.close').live('click',function(){
@@ -132,7 +133,7 @@ $.fn.calendar = function(){
 				self.setCurTd($(this));
 				
 				//заполнение данными
-				self.$popup.find('.date span').text(self.$curTd.attr('data-date')+'.'+(self.curDate.getMonth()+1)+'.'+self.curDate.getFullYear());
+				self.$popup.find('.date span').text(self.$curTd.attr('data-date')+' '+(self.monthSklon[self.curDate.getMonth()]));
 				
 				if(self.$curTd.hasClass('full')){				
 					self.$popup.find('.description').removeClass('empty').find('span').text(self.$curTd.attr('data-descr'));

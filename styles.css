@@ -25,9 +25,9 @@ body{
 
 #main-table .item:hover{
 	
-	border-color:#aecde6;
+	border-color:#8abfe9;
 	cursor:pointer;
-	background:#f3f7f9;
+	background:#e5f1f9;
 	
 }
 #main-table .item.today{
@@ -108,11 +108,13 @@ body{
 .top  .sug li{
 	display:block;
 	height:23px;
-	line-height:23px;
+	line-height:14px;
 	border-top:1px solid #c6c6c6;
 	overflow:hidden;
 	padding:8px 3px;
 	margin:3px;
+	font-size:13px;	
+	color:#000;
 	
 }
 .top  .sug li:first-child{
@@ -120,11 +122,20 @@ body{
 }
 .top  .sug li:hover{
 	cursor:pointer;
-	background:yellow;
+	background:#27a1ff;
+	color:white;
 }
-
-
-
+.top  .sug li p{
+	margin:0;
+	padding:0;
+}
+.top  .sug li span{
+	font-size:11px;
+	color:#666666;
+}
+.top  .sug li:hover span{
+	color:white;
+}
 
 .header {
 	
