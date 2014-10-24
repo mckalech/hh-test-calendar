@@ -27,6 +27,12 @@ class Calendar
 	$curTd 		: 	null
 	
 	constructor: () ->
+		@initHtml()
+		@fullInfo()
+		@curDate = new Date()
+		@fullContainer()
+		@bindHandlers()
+	initHtml : () ->
 		@$prevBtn 	= 	$('.prev')
 		@$nextBtn 	= 	$('.next')
 		@$saveBtn 	= 	$('.save')
@@ -35,14 +41,9 @@ class Calendar
 		@$searchSug	= 	$('.sug')
 		@$todayBtn 	= 	$('.today-btn')
 		@$warning 	= 	$('.warning')
-		@$monthElem 	= 	$('.month')
-		@$popup 		= 	$('.cal__popup')
+		@$monthElem = 	$('.month')
+		@$popup 	= 	$('.cal__popup')
 		@$elem 		= 	$('.container')
-		@fullInfo()
-		@curDate = new Date()
-		@fullContainer()
-		@bindHandlers()
-	
 	bindHandlers : () ->
 		@$prevBtn.on 'click', () =>
 			@prevMonth()
@@ -84,7 +85,7 @@ class Calendar
 				@$searchSug.hide()
 			yes
 		
-		@$searchSug.find('li').live 'click', (e)=>
+		@$searchSug.on 'click', 'li', (e)=>
 			dateMas=$(e.currentTarget).attr('data-date').split('-')
 			@curDate.setMonth(dateMas[1])
 			@curDate.setYear(dateMas[2])
@@ -93,21 +94,21 @@ class Calendar
 			@$searchQ.val('')
 			yes
 		
-		@$popup.find('.close').live 'click', () =>
+		@$popup.find('.close').on 'click', () =>
 			@hidePopup()
 			yes
 		
-		@$popup.find('input, textarea').live 'blur', (e)=>			
+		@$popup.find('input, textarea').on 'blur', (e)=>			
 			text = $(e.currentTarget).val()
 			$(e.currentTarget).parent().removeClass('empty').find('span').text(text) if text
 			yes
 
-		@$popup.find('.edit span').live 'click', (e)=>
+		@$popup.on 'click', '.edit span', (e)=>
 			text = $(e.currentTarget).text()
 			$(e.currentTarget).parent().addClass('empty').find('input, textarea').val(text).focus()
 			yes
 		
-		@$td.live 'click',(e)=>
+		@$elem.on 'click', '.item', (e)=> 
 			@showPopup({x:e.clientX,y:e.clientY})
 			@setCurTd($(e.currentTarget))
 			@$popup.find('.date span').text("#{@$curTd.attr('data-date')} #{@monthSklon[@curDate.getMonth()]}")		
@@ -163,7 +164,7 @@ class Calendar
 
 	saveInfo : (save) ->
 		date = @$curTd.attr('data-date')
-		key="#{date}-#{@curDate.getMonth()}-#{@curDate.getFullYear()}"	
+		key= "#{date}-#{@curDate.getMonth()}-#{@curDate.getFullYear()}"	
 		if save
 			@info[key]={}
 			@info[key].descr = @$curTd.attr('data-descr')
@@ -174,9 +175,7 @@ class Calendar
 		yes
 		
 	fullContainer : () ->
-
 		d=1
-		
 		@$elem.html('<table id="main-table" cellpadding=0 cellspacing=0 />');
 		for i in [0...@curDate.weeksInMonth()]		
 			if i>@curDate.weeksInMonth() then break;

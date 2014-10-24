@@ -1,0 +1,11 @@
+.DS_Store
+
+# Exclude node modules
+node_modules/
+
+# sass cache
+.sass-cache/
+
+
+# bower
+scripts/libs/

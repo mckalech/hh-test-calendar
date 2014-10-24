@@ -1,0 +1,12 @@
+{
+  "name": "hh-calendar-test",
+  "version": "1.0.0",
+  "authors": [
+    "mckalech <mckalech@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "jquery": "latest"
+  }
+}

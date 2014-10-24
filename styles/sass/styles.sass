@@ -1,0 +1,303 @@
+﻿body
+	margin: 0
+	padding: 0
+	font-family: Arial
+
+.clear
+	float: none
+	clear: both
+
+/*main table */
+#main-table
+	margin-top: 20px
+
+	td	
+		height: 115px
+		width: 117px
+		padding: 5px
+		font-size: 12px
+		vertical-align: top
+		border: 1px solid #e2e2e2
+		overflow: hidden
+		color: #666666
+	
+
+		&.item
+			&:hover
+				border-color: #8abfe9
+				cursor: pointer
+				background: #e5f1f9
+				
+			
+			&.today
+			
+				background: #f4f4f4
+				font-weight: bold
+			
+			&.active
+				background: #e5f1f9 
+				border-color: #8abfe9
+			
+		
+		&.full
+			background: #c2e4fe
+		
+		.date
+			color: #999999
+		
+		p
+			margin: 3px 0
+			&.name
+				font-weight: bold
+			
+		
+		
+	
+
+/*main table end*/
+.wrap
+	width: 960px
+	margin: auto
+	padding-bottom: 40px
+
+
+.top
+	padding-top: 50px
+	padding-bottom: 20px
+	background: #f4f4f4
+	border-bottom: 1px solid #d3d3d3
+	box-shadow: 0px 3px 3px #b7b7b7
+	margin-bottom: 20px
+
+	.search-block
+		position: relative
+		float: right
+		
+	.search
+		margin: 0
+		border: 1px solid #c6c6c6
+		height: 23px
+		outline: none
+		width: 200px
+		border-radius: 3px
+		padding: 0 3px
+		box-shadow: inset 0 1px 3px #666666
+	
+	.sug
+		position: absolute
+		top: 150%
+		left: 0
+		width: 230px
+		background: #fff
+		padding: 0
+		margin: 0
+		z-index: 100
+		
+		box-shadow: 1px -2px 2px #999999,-1px 1px 2px #999999
+		display: none
+	
+		&:before
+			position: absolute
+			left: 20px
+			bottom: 100%
+			color: #FFF
+			content: "▲"
+			font-size: 15px
+			text-shadow:  0px -2px 2px #999999
+			margin-bottom: -6px
+		
+
+
+		li
+			display: block
+			height: 23px
+			line-height: 14px
+			border-top: 1px solid #c6c6c6
+			overflow: hidden
+			padding: 8px 3px
+			margin: 3px
+			font-size: 13px	
+			color: #000
+			
+		
+			&:first-child
+				border: none
+			
+			&:hover
+				cursor: pointer
+				background: #27a1ff
+				color: white
+				
+				span
+					color: white
+				
+			
+			p
+				margin: 0
+				padding: 0
+			
+			span
+				font-size: 11px
+				color: #666666
+			
+		
+	
+
+
+.header 
+	.nav
+		cursor: pointer
+		width: 15px
+		height: 15px
+		display: inline-block
+		border: 1px solid #a6a6a6
+		border-radius: 2px
+		position: relative
+	
+		&:after
+			content: ""
+			width: 0px
+			height: 0px
+			border: 4px solid transparent
+			
+			position: absolute
+			top: 4px
+			
+		
+		&.next:after
+			border-left-color: #a5a5a5
+			left: 6px
+		
+		&.prev:after
+			border-right-color: #a5a5a5
+			left: 1px
+		
+	
+	.month	
+		display: inline-block
+		line-height: 18px
+		vertical-align: top
+		font-size: 14px
+		width: 110px
+		text-align: center
+	
+
+
+	.today-btn
+		cursor: pointer
+		height: 15px
+		display: inline-block
+		border: 1px solid #a6a6a6
+		border-radius: 2px
+		font-size: 12px
+		padding: 0 3px
+		margin-left: 10px
+		vertical-align:  top
+		color: #555555
+	
+
+
+
+.cal__popup
+	position: absolute
+	background: #FFF
+	box-shadow: 1px 3px 2px #666666, 0px -1px 2px #666666
+	border-radius: 5px
+	display: none
+	padding: 20px
+
+	&:before
+		position: absolute
+		margin-right: -2px
+		right: 100%
+		top: 20px
+		color: #FFF
+		content: "◀"
+		font-size: 22px
+		text-shadow: 0px 2px 0px #666666
+	
+
+	.close
+		position: absolute
+		top: 10px
+		right: 10px
+		cursor: pointer
+		line-height: 12px
+		font-size: 13px
+	
+	p 
+		margin: 10px 0
+		
+		&.date span
+			font-size: 14px
+			height: 20px
+		
+	
+	input, textarea
+		display: block
+		display: none
+		border: 1px solid #d2d2d2
+		border-radius: 3px	
+		outline: none
+		line-height: 25px
+		box-shadow: inset 1px 2px 2px #a5a5a5
+	
+	input
+		height: 25px	
+		width: 198px	
+		padding: 0 0 0 2px
+	
+	textarea
+		height: 200px
+		resize: none
+		width: 196px
+		padding: 2px
+	
+	.empty
+		input, textarea
+			display: block	
+		
+		span
+			display: none	
+		
+	
+	p span
+		display: block
+		width: 202px
+		height: 27px
+		line-height: 25px
+	
+	.description span
+		
+		height: 206px
+
+	
+	.name span
+		font-weight: bold
+	
+	.save
+		cursor: pointer
+		border: 1px solid #d2d2d2
+		padding: 2px 4px
+		border-radius: 3px
+		float: left	
+		background: #b5f0b5
+	
+	.delete
+		cursor: pointer
+		border: 1px solid #d2d2d2
+		padding: 2px 4px
+		border-radius: 3px
+		float: right
+		background: #f0b5b5
+	
+	.warning-wrapper
+		height: 25px
+	
+	.warning
+		color: red
+		display: none
+		font-size: 11px
+		
+		&.visible
+			display: block
