@@ -1,5 +1,5 @@
 (function() {
-  define(['jquery', 'utils'], function($, utils) {
+  define(['jquery', 'utils', 'header'], function($, utils, Header) {
     var Calendar;
     Calendar = (function() {
       Calendar.prototype.today = new Date();
@@ -8,11 +8,11 @@
 
       Calendar.prototype.info = {};
 
-      Calendar.prototype.days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
+      Calendar.prototype.days = utils.days;
 
-      Calendar.prototype.months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+      Calendar.prototype.months = utils.months;
 
-      Calendar.prototype.monthSklon = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+      Calendar.prototype.monthSklon = utils.monthSklon;
 
       Calendar.prototype.$td = null;
 
@@ -22,47 +22,22 @@
         this.initHtml();
         this.fullInfo();
         this.curDate = new Date();
+        this.header = new Header(this);
         this.fullContainer();
         this.bindHandlers();
       }
 
       Calendar.prototype.initHtml = function() {
-        this.$prevBtn = $('.prev');
-        this.$nextBtn = $('.next');
         this.$saveBtn = $('.save');
         this.$delBtn = $('.delete');
         this.$searchQ = $('.search');
         this.$searchSug = $('.sug');
-        this.$todayBtn = $('.today-btn');
         this.$warning = $('.warning');
-        this.$monthElem = $('.month');
         this.$popup = $('.cal__popup');
-        return this.$elem = $('.container');
+        this.$elem = $('.container');
       };
 
       Calendar.prototype.bindHandlers = function() {
-        this.$prevBtn.on('click', (function(_this) {
-          return function() {
-            _this.prevMonth();
-            _this.hidePopup();
-            _this.fullContainer();
-          };
-        })(this));
-        this.$nextBtn.on('click', (function(_this) {
-          return function() {
-            _this.nextMonth();
-            _this.hidePopup();
-            _this.fullContainer();
-          };
-        })(this));
-        this.$todayBtn.on('click', (function(_this) {
-          return function() {
-            _this.curDate.setMonth(_this.today.getMonth());
-            _this.curDate.setYear(_this.today.getFullYear());
-            _this.hidePopup();
-            _this.fullContainer();
-          };
-        })(this));
         this.$searchQ.bind('keyup', (function(_this) {
           return function(e) {
             var index, isWords, query, replStr, value, _ref;
@@ -154,7 +129,7 @@
             }
           };
         })(this));
-        return this.$delBtn.on('click', (function(_this) {
+        this.$delBtn.on('click', (function(_this) {
           return function() {
             _this.$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('full').find('p').text('');
             _this.$popup.find('input, textarea').val('');
@@ -227,7 +202,7 @@
             this.$elem.find("td[data-date='" + d + "']").attr('data-descr', this.info[key].descr).attr('data-name', this.info[key].name).addClass('full').find('.name').text(this.info[key].name).siblings('.descr').text(this.info[key].descr);
           }
         }
-        this.$monthElem.text("" + this.months[this.curDate.getMonth()] + " " + (this.curDate.getFullYear()));
+        this.header.$monthElem.text("" + this.months[this.curDate.getMonth()] + " " + (this.curDate.getFullYear()));
         this.$td = this.$elem.find('.item');
       };
 

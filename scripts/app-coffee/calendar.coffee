@@ -1,52 +1,32 @@
-define ['jquery', 'utils'], ($, utils) ->
+define ['jquery', 'utils', 'header'], ($, utils, Header) ->
 	class Calendar 
 		today		:	new Date()
 		curDate		:	null
-		info			:	{}
-		days 		:	['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
-		months 		:	['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
-		monthSklon 	: 	['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
-		$td 			: 	null
+		info		:	{}
+		days 		:	utils.days
+		months 		:	utils.months
+		monthSklon 	: 	utils.monthSklon
+		$td 		: 	null
 		$curTd 		: 	null
 		
 		constructor: () ->
 			@initHtml()
 			@fullInfo()
 			@curDate = new Date()
+			@header = new Header(this)
 			@fullContainer()
 			@bindHandlers()
 		initHtml : () ->
-			@$prevBtn 	= 	$('.prev')
-			@$nextBtn 	= 	$('.next')
 			@$saveBtn 	= 	$('.save')
 			@$delBtn 	= 	$('.delete')
 			@$searchQ 	= 	$('.search')
 			@$searchSug	= 	$('.sug')
-			@$todayBtn 	= 	$('.today-btn')
 			@$warning 	= 	$('.warning')
-			@$monthElem = 	$('.month')
 			@$popup 	= 	$('.cal__popup')
 			@$elem 		= 	$('.container')
+			return
+
 		bindHandlers : () ->
-			@$prevBtn.on 'click', () =>
-				@prevMonth()
-				@hidePopup()
-				@fullContainer()
-				return
-
-			@$nextBtn.on 'click', () =>
-				@nextMonth()
-				@hidePopup()
-				@fullContainer()
-				return
-
-			@$todayBtn.on 'click', () =>
-				@curDate.setMonth(@today.getMonth())
-				@curDate.setYear(@today.getFullYear())
-				@hidePopup()
-				@fullContainer()
-				return
-			
 			@$searchQ.bind 'keyup', (e) =>
 				query=$(e.currentTarget).val()
 				isWords=no
@@ -132,6 +112,8 @@ define ['jquery', 'utils'], ($, utils) ->
 				@hidePopup()
 				return
 
+			return
+
 		prevMonth : () ->
 			@curDate.setMonth(@curDate.getMonth()-1)
 			return
@@ -187,7 +169,7 @@ define ['jquery', 'utils'], ($, utils) ->
 						.addClass('full').find('.name').text(@info[key].name)
 						.siblings('.descr').text(@info[key].descr)
 			
-			@$monthElem.text("#{@months[@curDate.getMonth()]} #{@curDate.getFullYear()}")
+			@header.$monthElem.text("#{@months[@curDate.getMonth()]} #{@curDate.getFullYear()}")
 			@$td = @$elem.find('.item')	
 			return
 			
