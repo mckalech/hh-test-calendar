@@ -2,20 +2,19 @@ define ['jquery'], ($) ->
 	class Data
 		info : {}
 		constructor: (calendar) ->
-			@calendar = calendar
-
-		fullInfo : () ->
 			if localStorage['info']
 				@info=JSON.parse(localStorage['info'])
-			return
+			@calendar = calendar
 
-		saveInfo : (save) ->
-			date = @calendar.$curTd.attr('data-date')
-			key= "#{date}-#{@calendar.curDate.getMonth()}-#{@calendar.curDate.getFullYear()}"	
+		getData : () ->
+			return @info
+
+		setData : (options, save) ->
+			key= "#{options.day}-#{options.curDate.getMonth()}-#{options.curDate.getFullYear()}"	
 			if save
 				@info[key]={}
-				@info[key].descr = @calendar.$curTd.attr('data-descr')
-				@info[key].name = @calendar.$curTd.attr('data-name')
+				@info[key].descr = options.descr
+				@info[key].name = options.name
 			else
 				delete @info[key]
 			localStorage['info']=JSON.stringify(@info)

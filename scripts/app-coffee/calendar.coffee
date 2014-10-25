@@ -1,15 +1,13 @@
 define ['jquery', 'utils', 'header', 'data'], ($, utils, Header, Data) ->
 	class Calendar 
 		today		:	new Date()
-		curDate		:	null
+		curDate		:	new Date()
 		$td 		: 	null
 		$curTd 		: 	null
 		
 		constructor: () ->
 			@initHtml()
 			@data = new Data(this)
-			@data.fullInfo()
-			@curDate = new Date()
 			@header = new Header(this)
 			@fullContainer()
 			@bindHandlers()
@@ -26,12 +24,13 @@ define ['jquery', 'utils', 'header', 'data'], ($, utils, Header, Data) ->
 		bindHandlers : () ->
 			@$searchQ.bind 'keyup', (e) =>
 				query = $(e.currentTarget).val()
+				data = @data.getData()
 				isWords = no
 				@$searchSug.html('')
 				if query.length>2
 					@$searchSug.show()
 					isWords = no
-					for index, value of @data.info			
+					for index, value of data			
 						if value.descr.toLowerCase().indexOf(query.toLowerCase())>=0
 							replStr = value.descr.replaceAll(query,"<b>#{query}</b>")
 							@$searchSug.append("<li data-date='#{index}'><p>#{replStr}</p><span>#{index.split('-')[0]} #{utils.monthSklon[index.split('-')[1]]}</span></li")
@@ -60,7 +59,8 @@ define ['jquery', 'utils', 'header', 'data'], ($, utils, Header, Data) ->
 			
 			@$popup.find('input, textarea').on 'blur', (e)=>			
 				text = $(e.currentTarget).val()
-				$(e.currentTarget).parent().removeClass('empty').find('span').text(text) if text
+				$(e.currentTarget).siblings('span').text(text) 
+				if text then $(e.currentTarget).parent().removeClass('empty')
 				return
 
 			@$popup.on 'click', '.edit span', (e)=>
@@ -81,32 +81,18 @@ define ['jquery', 'utils', 'header', 'data'], ($, utils, Header, Data) ->
 				return
 			
 			@$saveBtn.on 'click', ()=>
-			
-				if @$popup.find('.description').find('span').text() and @$popup.find('.name').find('span').text()		
-					@$curTd
-						.attr('data-descr',@$popup.find('.description').find('span').text())
-						.attr('data-name',@$popup.find('.name').find('span').text())
-						.addClass('full')
-						.find('.name').text(@$popup.find('.name').find('span').text())
-						.siblings('.descr').text(@$popup.find('.description').find('span').text())
-					
-					@data.saveInfo(yes)	
-					@$popup.find('input, textarea').val('')			
-					@hidePopup()
+				description = @$popup.find('.description').find('span').text()
+				name = @$popup.find('.name').find('span').text()
+				if description and name	
+					@saveItem()
+				else unless description or name	
+					@deleteItem()
 				else
 					@$warning.addClass('visible')
 				return		
 
 			@$delBtn.on 'click', ()=>
-				@$curTd
-					.removeAttr('data-descr')
-					.removeAttr('data-name')
-					.removeClass('full')
-					.find('p').text('')
-				
-				@$popup.find('input, textarea').val('')
-				@data.saveInfo()
-				@hidePopup()
+				@deleteItem()
 				return
 
 			return
@@ -121,6 +107,7 @@ define ['jquery', 'utils', 'header', 'data'], ($, utils, Header, Data) ->
 			
 		fullContainer : () ->
 			d=1
+			data = @data.getData()
 			@$elem.html('<table id="main-table" cellpadding=0 cellspacing=0 />');
 			for i in [0...@curDate.weeksInMonth()]		
 				if i>@curDate.weeksInMonth() then break;
@@ -137,17 +124,17 @@ define ['jquery', 'utils', 'header', 'data'], ($, utils, Header, Data) ->
 					newTd.append("<div class='date'>#{dayText}</div><p class='name'></p><p class='descr'></p>").attr('data-date',d).addClass('item').addClass(if d==@today.getDate() and @curDate.getMonth()==@today.getMonth() and @curDate.getYear()==@today.getYear() then 'today' else '');
 					d++
 			
-			for key of @data.info			
+			for key of data		
 				dateMas = key.split('-').map((el)->parseInt(el))
 				d = dateMas[0]
 				m = dateMas[1]
 				y = dateMas[2]
-				if @data.info[key] and @curDate.getMonth()==m and @curDate.getFullYear()==y
+				if data[key] and @curDate.getMonth()==m and @curDate.getFullYear()==y
 					@$elem.find("td[data-date='#{d}']")
-						.attr('data-descr',@data.info[key].descr)
-						.attr('data-name',@data.info[key].name)
-						.addClass('full').find('.name').text(@data.info[key].name)
-						.siblings('.descr').text(@data.info[key].descr)
+						.attr('data-descr',data[key].descr)
+						.attr('data-name',data[key].name)
+						.addClass('full').find('.name').text(data[key].name)
+						.siblings('.descr').text(data[key].descr)
 			
 			@header.$monthElem.text("#{utils.months[@curDate.getMonth()]} #{@curDate.getFullYear()}")
 			@$td = @$elem.find('.item')	
@@ -163,6 +150,39 @@ define ['jquery', 'utils', 'header', 'data'], ($, utils, Header, Data) ->
 		hidePopup:() ->
 			@$popup.fadeOut(100)
 			@setCurTd(null)
+			return
+
+		saveItem:() ->
+			@$curTd
+				.attr('data-descr',@$popup.find('.description').find('span').text())
+				.attr('data-name',@$popup.find('.name').find('span').text())
+				.addClass('full')
+				.find('.name').text(@$popup.find('.name').find('span').text())
+				.siblings('.descr').text(@$popup.find('.description').find('span').text())
+			options = {
+				day : @$curTd.attr('data-date')
+				curDate : @curDate
+				descr : @$curTd.attr('data-descr')
+				name : @$curTd.attr('data-name')
+			}
+			@data.setData(options, yes)	
+			@$popup.find('input, textarea').val('')			
+			@hidePopup()
+			return 
+
+		deleteItem:() ->
+			@$curTd
+				.removeAttr('data-descr')
+				.removeAttr('data-name')
+				.removeClass('full')
+				.find('p').text('')
+			options = {
+				day : @$curTd.attr('data-date')
+				curDate : @curDate
+			}
+			@data.setData(options, no)
+			@$popup.find('input, textarea').val('')
+			@hidePopup()
 			return
 
 		setCurTd : ($tdElem) ->

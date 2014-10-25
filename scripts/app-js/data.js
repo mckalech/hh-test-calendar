@@ -5,23 +5,23 @@
       Data.prototype.info = {};
 
       function Data(calendar) {
-        this.calendar = calendar;
-      }
-
-      Data.prototype.fullInfo = function() {
         if (localStorage['info']) {
           this.info = JSON.parse(localStorage['info']);
         }
+        this.calendar = calendar;
+      }
+
+      Data.prototype.getData = function() {
+        return this.info;
       };
 
-      Data.prototype.saveInfo = function(save) {
-        var date, key;
-        date = this.calendar.$curTd.attr('data-date');
-        key = "" + date + "-" + (this.calendar.curDate.getMonth()) + "-" + (this.calendar.curDate.getFullYear());
+      Data.prototype.setData = function(options, save) {
+        var key;
+        key = "" + options.day + "-" + (options.curDate.getMonth()) + "-" + (options.curDate.getFullYear());
         if (save) {
           this.info[key] = {};
-          this.info[key].descr = this.calendar.$curTd.attr('data-descr');
-          this.info[key].name = this.calendar.$curTd.attr('data-name');
+          this.info[key].descr = options.descr;
+          this.info[key].name = options.name;
         } else {
           delete this.info[key];
         }

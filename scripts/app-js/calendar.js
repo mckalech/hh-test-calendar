@@ -4,7 +4,7 @@
     Calendar = (function() {
       Calendar.prototype.today = new Date();
 
-      Calendar.prototype.curDate = null;
+      Calendar.prototype.curDate = new Date();
 
       Calendar.prototype.$td = null;
 
@@ -13,8 +13,6 @@
       function Calendar() {
         this.initHtml();
         this.data = new Data(this);
-        this.data.fullInfo();
-        this.curDate = new Date();
         this.header = new Header(this);
         this.fullContainer();
         this.bindHandlers();
@@ -33,16 +31,16 @@
       Calendar.prototype.bindHandlers = function() {
         this.$searchQ.bind('keyup', (function(_this) {
           return function(e) {
-            var index, isWords, query, replStr, value, _ref;
+            var data, index, isWords, query, replStr, value;
             query = $(e.currentTarget).val();
+            data = _this.data.getData();
             isWords = false;
             _this.$searchSug.html('');
             if (query.length > 2) {
               _this.$searchSug.show();
               isWords = false;
-              _ref = _this.data.info;
-              for (index in _ref) {
-                value = _ref[index];
+              for (index in data) {
+                value = data[index];
                 if (value.descr.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
                   replStr = value.descr.replaceAll(query, "<b>" + query + "</b>");
                   _this.$searchSug.append("<li data-date='" + index + "'><p>" + replStr + "</p><span>" + (index.split('-')[0]) + " " + utils.monthSklon[index.split('-')[1]] + "</span></li");
@@ -81,8 +79,9 @@
           return function(e) {
             var text;
             text = $(e.currentTarget).val();
+            $(e.currentTarget).siblings('span').text(text);
             if (text) {
-              $(e.currentTarget).parent().removeClass('empty').find('span').text(text);
+              $(e.currentTarget).parent().removeClass('empty');
             }
           };
         })(this));
@@ -112,11 +111,13 @@
         })(this));
         this.$saveBtn.on('click', (function(_this) {
           return function() {
-            if (_this.$popup.find('.description').find('span').text() && _this.$popup.find('.name').find('span').text()) {
-              _this.$curTd.attr('data-descr', _this.$popup.find('.description').find('span').text()).attr('data-name', _this.$popup.find('.name').find('span').text()).addClass('full').find('.name').text(_this.$popup.find('.name').find('span').text()).siblings('.descr').text(_this.$popup.find('.description').find('span').text());
-              _this.data.saveInfo(true);
-              _this.$popup.find('input, textarea').val('');
-              _this.hidePopup();
+            var description, name;
+            description = _this.$popup.find('.description').find('span').text();
+            name = _this.$popup.find('.name').find('span').text();
+            if (description && name) {
+              _this.saveItem();
+            } else if (!(description || name)) {
+              _this.deleteItem();
             } else {
               _this.$warning.addClass('visible');
             }
@@ -124,10 +125,7 @@
         })(this));
         this.$delBtn.on('click', (function(_this) {
           return function() {
-            _this.$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('full').find('p').text('');
-            _this.$popup.find('input, textarea').val('');
-            _this.data.saveInfo();
-            _this.hidePopup();
+            _this.deleteItem();
           };
         })(this));
       };
@@ -141,8 +139,9 @@
       };
 
       Calendar.prototype.fullContainer = function() {
-        var d, dateMas, dayText, i, j, key, m, newTd, y, _i, _j, _ref;
+        var d, data, dateMas, dayText, i, j, key, m, newTd, y, _i, _j, _ref;
         d = 1;
+        data = this.data.getData();
         this.$elem.html('<table id="main-table" cellpadding=0 cellspacing=0 />');
         for (i = _i = 0, _ref = this.curDate.weeksInMonth(); 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
           if (i > this.curDate.weeksInMonth()) {
@@ -164,15 +163,15 @@
             d++;
           }
         }
-        for (key in this.data.info) {
+        for (key in data) {
           dateMas = key.split('-').map(function(el) {
             return parseInt(el);
           });
           d = dateMas[0];
           m = dateMas[1];
           y = dateMas[2];
-          if (this.data.info[key] && this.curDate.getMonth() === m && this.curDate.getFullYear() === y) {
-            this.$elem.find("td[data-date='" + d + "']").attr('data-descr', this.data.info[key].descr).attr('data-name', this.data.info[key].name).addClass('full').find('.name').text(this.data.info[key].name).siblings('.descr').text(this.data.info[key].descr);
+          if (data[key] && this.curDate.getMonth() === m && this.curDate.getFullYear() === y) {
+            this.$elem.find("td[data-date='" + d + "']").attr('data-descr', data[key].descr).attr('data-name', data[key].name).addClass('full').find('.name').text(data[key].name).siblings('.descr').text(data[key].descr);
           }
         }
         this.header.$monthElem.text("" + utils.months[this.curDate.getMonth()] + " " + (this.curDate.getFullYear()));
@@ -193,6 +192,32 @@
       Calendar.prototype.hidePopup = function() {
         this.$popup.fadeOut(100);
         this.setCurTd(null);
+      };
+
+      Calendar.prototype.saveItem = function() {
+        var options;
+        this.$curTd.attr('data-descr', this.$popup.find('.description').find('span').text()).attr('data-name', this.$popup.find('.name').find('span').text()).addClass('full').find('.name').text(this.$popup.find('.name').find('span').text()).siblings('.descr').text(this.$popup.find('.description').find('span').text());
+        options = {
+          day: this.$curTd.attr('data-date'),
+          curDate: this.curDate,
+          descr: this.$curTd.attr('data-descr'),
+          name: this.$curTd.attr('data-name')
+        };
+        this.data.setData(options, true);
+        this.$popup.find('input, textarea').val('');
+        this.hidePopup();
+      };
+
+      Calendar.prototype.deleteItem = function() {
+        var options;
+        this.$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('full').find('p').text('');
+        options = {
+          day: this.$curTd.attr('data-date'),
+          curDate: this.curDate
+        };
+        this.data.setData(options, false);
+        this.$popup.find('input, textarea').val('');
+        this.hidePopup();
       };
 
       Calendar.prototype.setCurTd = function($tdElem) {
