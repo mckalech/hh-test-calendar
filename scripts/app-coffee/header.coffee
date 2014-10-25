@@ -1,4 +1,4 @@
-define ['jquery', 'utils'], ($, utils) ->
+define ['jquery'], ($) ->
 	class Header 
 		constructor: (calendar) ->
 			@calendar = calendar

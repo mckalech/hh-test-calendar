@@ -1,17 +1,14 @@
-define ['jquery', 'utils', 'header'], ($, utils, Header) ->
+define ['jquery', 'utils', 'header', 'data'], ($, utils, Header, Data) ->
 	class Calendar 
 		today		:	new Date()
 		curDate		:	null
-		info		:	{}
-		days 		:	utils.days
-		months 		:	utils.months
-		monthSklon 	: 	utils.monthSklon
 		$td 		: 	null
 		$curTd 		: 	null
 		
 		constructor: () ->
 			@initHtml()
-			@fullInfo()
+			@data = new Data(this)
+			@data.fullInfo()
 			@curDate = new Date()
 			@header = new Header(this)
 			@fullContainer()
@@ -28,21 +25,21 @@ define ['jquery', 'utils', 'header'], ($, utils, Header) ->
 
 		bindHandlers : () ->
 			@$searchQ.bind 'keyup', (e) =>
-				query=$(e.currentTarget).val()
-				isWords=no
+				query = $(e.currentTarget).val()
+				isWords = no
 				@$searchSug.html('')
 				if query.length>2
 					@$searchSug.show()
 					isWords = no
-					for index, value of @info			
+					for index, value of @data.info			
 						if value.descr.toLowerCase().indexOf(query.toLowerCase())>=0
 							replStr = value.descr.replaceAll(query,"<b>#{query}</b>")
-							@$searchSug.append("<li data-date='#{index}'><p>#{replStr}</p><span>#{index.split('-')[0]} #{@monthSklon[index.split('-')[1]]}</span></li")
-							isWords=yes
+							@$searchSug.append("<li data-date='#{index}'><p>#{replStr}</p><span>#{index.split('-')[0]} #{utils.monthSklon[index.split('-')[1]]}</span></li")
+							isWords = yes
 						else if value.name.indexOf(query)>=0
 							replStr = value.name.replaceAll(query,"<b>#{query}</b>")
-							@$searchSug.append("<li data-date='#{index}'><p>#{replStr}</p><span>#{index.split('-')[0]} #{@monthSklon[index.split('-')[1]]}</span></li")
-							isWords=yes
+							@$searchSug.append("<li data-date='#{index}'><p>#{replStr}</p><span>#{index.split('-')[0]} #{utils.monthSklon[index.split('-')[1]]}</span></li")
+							isWords = yes
 					@$searchSug.hide() unless isWords
 				else
 					@$searchSug.hide()
@@ -74,7 +71,7 @@ define ['jquery', 'utils', 'header'], ($, utils, Header) ->
 			@$elem.on 'click', '.item', (e)=> 
 				@showPopup({x:e.clientX,y:e.clientY})
 				@setCurTd($(e.currentTarget))
-				@$popup.find('.date span').text("#{@$curTd.attr('data-date')} #{@monthSklon[@curDate.getMonth()]}")		
+				@$popup.find('.date span').text("#{@$curTd.attr('data-date')} #{utils.monthSklon[@curDate.getMonth()]}")		
 				if @$curTd.hasClass('full')				
 					@$popup.find('.description').removeClass('empty').find('span').text(@$curTd.attr('data-descr'))
 					@$popup.find('.name').removeClass('empty').find('span').text(@$curTd.attr('data-name'))
@@ -93,7 +90,7 @@ define ['jquery', 'utils', 'header'], ($, utils, Header) ->
 						.find('.name').text(@$popup.find('.name').find('span').text())
 						.siblings('.descr').text(@$popup.find('.description').find('span').text())
 					
-					@saveInfo(yes)	
+					@data.saveInfo(yes)	
 					@$popup.find('input, textarea').val('')			
 					@hidePopup()
 				else
@@ -108,7 +105,7 @@ define ['jquery', 'utils', 'header'], ($, utils, Header) ->
 					.find('p').text('')
 				
 				@$popup.find('input, textarea').val('')
-				@saveInfo()
+				@data.saveInfo()
 				@hidePopup()
 				return
 
@@ -121,23 +118,6 @@ define ['jquery', 'utils', 'header'], ($, utils, Header) ->
 		nextMonth : () ->
 			@curDate.setMonth(@curDate.getMonth()+1)
 			return
-
-		fullInfo : () ->
-			if localStorage['info']
-				@info=JSON.parse(localStorage['info'])
-			return
-
-		saveInfo : (save) ->
-			date = @$curTd.attr('data-date')
-			key= "#{date}-#{@curDate.getMonth()}-#{@curDate.getFullYear()}"	
-			if save
-				@info[key]={}
-				@info[key].descr = @$curTd.attr('data-descr')
-				@info[key].name = @$curTd.attr('data-name')
-			else
-				delete @info[key]
-			localStorage['info']=JSON.stringify(@info)
-			return
 			
 		fullContainer : () ->
 			d=1
@@ -147,29 +127,29 @@ define ['jquery', 'utils', 'header'], ($, utils, Header) ->
 				@$elem.find('table').append('<tr />')
 				j = 0
 				while j<@curDate.firstDayInMonth() and i==0 					
-					@$elem.find('tr').append("<td><div class='date'>#{@days[j]}</div></td>")
+					@$elem.find('tr').append("<td><div class='date'>#{utils.days[j]}</div></td>")
 					j++
 				
 				for j in [j...7]
 					newTd = $('<td />').appendTo(@$elem.find('tr').last())
 					if d>@curDate.daysInMonth() then continue					
-					dayText =  if i==0 then "#{@days[j]}, #{d}" else d					
+					dayText =  if i==0 then "#{utils.days[j]}, #{d}" else d					
 					newTd.append("<div class='date'>#{dayText}</div><p class='name'></p><p class='descr'></p>").attr('data-date',d).addClass('item').addClass(if d==@today.getDate() and @curDate.getMonth()==@today.getMonth() and @curDate.getYear()==@today.getYear() then 'today' else '');
 					d++
 			
-			for key of @info			
+			for key of @data.info			
 				dateMas = key.split('-').map((el)->parseInt(el))
 				d = dateMas[0]
 				m = dateMas[1]
 				y = dateMas[2]
-				if @info[key] and @curDate.getMonth()==m and @curDate.getFullYear()==y
+				if @data.info[key] and @curDate.getMonth()==m and @curDate.getFullYear()==y
 					@$elem.find("td[data-date='#{d}']")
-						.attr('data-descr',@info[key].descr)
-						.attr('data-name',@info[key].name)
-						.addClass('full').find('.name').text(@info[key].name)
-						.siblings('.descr').text(@info[key].descr)
+						.attr('data-descr',@data.info[key].descr)
+						.attr('data-name',@data.info[key].name)
+						.addClass('full').find('.name').text(@data.info[key].name)
+						.siblings('.descr').text(@data.info[key].descr)
 			
-			@header.$monthElem.text("#{@months[@curDate.getMonth()]} #{@curDate.getFullYear()}")
+			@header.$monthElem.text("#{utils.months[@curDate.getMonth()]} #{@curDate.getFullYear()}")
 			@$td = @$elem.find('.item')	
 			return
 			

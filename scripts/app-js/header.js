@@ -1,5 +1,5 @@
 (function() {
-  define(['jquery', 'utils'], function($, utils) {
+  define(['jquery'], function($) {
     var Header;
     Header = (function() {
       function Header(calendar) {
