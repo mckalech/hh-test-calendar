@@ -18,6 +18,7 @@ define ['jquery', 'utils', 'header', 'data', 'sg', 'popup'], ($, utils, Header, 
 
 		bindHandlers : () ->	
 			@$elem.on 'click', '.item', (e)=> 
+				@hideElements({hideSg:yes})
 				@popup.showPopup({x:e.clientX,y:e.clientY})
 				@setCurTd($(e.currentTarget))
 				@popup.$popup.find('.date span').text("#{@$curTd.attr('data-date')} #{utils.monthSklon[@curDate.getMonth()]}")		
@@ -88,7 +89,7 @@ define ['jquery', 'utils', 'header', 'data', 'sg', 'popup'], ($, utils, Header, 
 			}
 			@data.setData(options, yes)	
 			@popup.$popup.find('input, textarea').val('')			
-			@popup.hidePopup()
+			@hideElements({hidePopup:yes})
 			return 
 
 		deleteItem:() ->
@@ -103,7 +104,7 @@ define ['jquery', 'utils', 'header', 'data', 'sg', 'popup'], ($, utils, Header, 
 			}
 			@data.setData(options, no)
 			@popup.$popup.find('input, textarea').val('')
-			@popup.hidePopup()
+			@hideElements({hidePopup:yes})
 			return
 
 		setCurTd : ($tdElem) ->
@@ -111,6 +112,10 @@ define ['jquery', 'utils', 'header', 'data', 'sg', 'popup'], ($, utils, Header, 
 			@$elem.find('.item').removeClass('active');
 			if @$curTd
 				@$curTd.addClass('active');
+			return
+		hideElements : (options) ->
+			if options.hidePopup then @popup.hidePopup()
+			if options.hideSg then @sg.hideSG()
 			return
 			
 	return Calendar

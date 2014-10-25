@@ -19,14 +19,20 @@
         this.$prevBtn.on('click', (function(_this) {
           return function() {
             _this.calendar.prevMonth();
-            _this.calendar.popup.hidePopup();
+            _this.calendar.hideElements({
+              hidePopup: true,
+              hideSg: true
+            });
             _this.calendar.fullContainer();
           };
         })(this));
         this.$nextBtn.on('click', (function(_this) {
           return function() {
             _this.calendar.nextMonth();
-            _this.calendar.popup.hidePopup();
+            _this.calendar.hideElements({
+              hidePopup: true,
+              hideSg: true
+            });
             _this.calendar.fullContainer();
           };
         })(this));
@@ -34,7 +40,10 @@
           return function() {
             _this.calendar.curDate.setMonth(_this.calendar.today.getMonth());
             _this.calendar.curDate.setYear(_this.calendar.today.getFullYear());
-            _this.calendar.popup.hidePopup();
+            _this.calendar.hideElements({
+              hidePopup: true,
+              hideSg: true
+            });
             _this.calendar.fullContainer();
           };
         })(this));

@@ -8,6 +8,10 @@ define ['jquery','utils'], ($, utils) ->
 			@$searchQ 	= 	$('.search')
 			@$searchSug	= 	$('.sug')
 		bindHandlers : () ->
+			@$searchQ.on 'focus', (e) =>
+				@calendar.hideElements({hidePopup:yes})
+				return
+
 			@$searchQ.bind 'keyup', (e) =>
 				query = $(e.currentTarget).val()
 				data = @calendar.data.getData()
@@ -23,9 +27,9 @@ define ['jquery','utils'], ($, utils) ->
 						else if value.name.toLowerCase().indexOf(query.toLowerCase())>=0
 							@appendSgItem(value.name, query, index)
 							isWords = yes
-					@$searchSug.hide() unless isWords
+					@hideSG() unless isWords
 				else
-					@$searchSug.hide()
+					@hideSG()
 				return
 			
 			@$searchSug.on 'click', 'li', (e)=>
@@ -34,7 +38,7 @@ define ['jquery','utils'], ($, utils) ->
 				@calendar.curDate.setMonth(dateMas[1])
 				@calendar.curDate.setYear(dateMas[2])
 				@calendar.fullContainer()
-				@$searchSug.html('').hide()
+				@hideSG()
 				@$searchQ.val('')
 				return
 			return
@@ -42,6 +46,8 @@ define ['jquery','utils'], ($, utils) ->
 			replStr = text.replaceAll(query,"<b>#{query}</b>")
 			@$searchSug.append("<li data-date='#{date}'><p>#{replStr}</p><span>#{date.split('-')[0]} #{utils.monthSklon[date.split('-')[1]]}</span></li")
 			return
+		hideSG : ()->
+			@$searchSug.html('').hide()
 							
 	return SG
 

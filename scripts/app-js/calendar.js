@@ -25,6 +25,9 @@
       Calendar.prototype.bindHandlers = function() {
         this.$elem.on('click', '.item', (function(_this) {
           return function(e) {
+            _this.hideElements({
+              hideSg: true
+            });
             _this.popup.showPopup({
               x: e.clientX,
               y: e.clientY
@@ -100,7 +103,9 @@
         };
         this.data.setData(options, true);
         this.popup.$popup.find('input, textarea').val('');
-        this.popup.hidePopup();
+        this.hideElements({
+          hidePopup: true
+        });
       };
 
       Calendar.prototype.deleteItem = function() {
@@ -112,7 +117,9 @@
         };
         this.data.setData(options, false);
         this.popup.$popup.find('input, textarea').val('');
-        this.popup.hidePopup();
+        this.hideElements({
+          hidePopup: true
+        });
       };
 
       Calendar.prototype.setCurTd = function($tdElem) {
@@ -120,6 +127,15 @@
         this.$elem.find('.item').removeClass('active');
         if (this.$curTd) {
           this.$curTd.addClass('active');
+        }
+      };
+
+      Calendar.prototype.hideElements = function(options) {
+        if (options.hidePopup) {
+          this.popup.hidePopup();
+        }
+        if (options.hideSg) {
+          this.sg.hideSG();
         }
       };
 

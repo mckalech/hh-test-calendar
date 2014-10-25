@@ -14,6 +14,13 @@
       };
 
       SG.prototype.bindHandlers = function() {
+        this.$searchQ.on('focus', (function(_this) {
+          return function(e) {
+            _this.calendar.hideElements({
+              hidePopup: true
+            });
+          };
+        })(this));
         this.$searchQ.bind('keyup', (function(_this) {
           return function(e) {
             var data, index, isWords, query, value;
@@ -35,10 +42,10 @@
                 }
               }
               if (!isWords) {
-                _this.$searchSug.hide();
+                _this.hideSG();
               }
             } else {
-              _this.$searchSug.hide();
+              _this.hideSG();
             }
           };
         })(this));
@@ -50,7 +57,7 @@
             _this.calendar.curDate.setMonth(dateMas[1]);
             _this.calendar.curDate.setYear(dateMas[2]);
             _this.calendar.fullContainer();
-            _this.$searchSug.html('').hide();
+            _this.hideSG();
             _this.$searchQ.val('');
           };
         })(this));
@@ -60,6 +67,10 @@
         var replStr;
         replStr = text.replaceAll(query, "<b>" + query + "</b>");
         this.$searchSug.append("<li data-date='" + date + "'><p>" + replStr + "</p><span>" + (date.split('-')[0]) + " " + utils.monthSklon[date.split('-')[1]] + "</span></li");
+      };
+
+      SG.prototype.hideSG = function() {
+        return this.$searchSug.html('').hide();
       };
 
       return SG;
