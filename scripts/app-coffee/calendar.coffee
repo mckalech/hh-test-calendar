@@ -46,9 +46,9 @@ define ['jquery', 'utils', 'header', 'data', 'sg', 'popup'], ($, utils, Header, 
 		fullContainer : () ->
 			d=1
 			data = @data.getData()
-			@$elem.html('<table id="main-table" cellpadding=0 cellspacing=0 />');
+			@$elem.html('<table id="main-table" />');
 			for i in [0...@curDate.weeksInMonth()]		
-				if i>@curDate.weeksInMonth() then break;
+				
 				@$elem.find('table').append('<tr />')
 				j = 0
 				while j<@curDate.firstDayInMonth() and i==0 					

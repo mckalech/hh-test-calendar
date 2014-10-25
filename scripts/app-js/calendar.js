@@ -58,11 +58,8 @@
         var d, data, dateMas, dayText, i, j, key, m, newTd, y, _i, _j, _ref;
         d = 1;
         data = this.data.getData();
-        this.$elem.html('<table id="main-table" cellpadding=0 cellspacing=0 />');
+        this.$elem.html('<table id="main-table" />');
         for (i = _i = 0, _ref = this.curDate.weeksInMonth(); 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-          if (i > this.curDate.weeksInMonth()) {
-            break;
-          }
           this.$elem.find('table').append('<tr />');
           j = 0;
           while (j < this.curDate.firstDayInMonth() && i === 0) {
