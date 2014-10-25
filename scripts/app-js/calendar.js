@@ -1,12 +1,10 @@
 (function() {
-  define(['jquery', 'utils', 'header', 'data'], function($, utils, Header, Data) {
+  define(['jquery', 'utils', 'header', 'data', 'sg', 'popup'], function($, utils, Header, Data, SG, Popup) {
     var Calendar;
     Calendar = (function() {
       Calendar.prototype.today = new Date();
 
       Calendar.prototype.curDate = new Date();
-
-      Calendar.prototype.$td = null;
 
       Calendar.prototype.$curTd = null;
 
@@ -14,118 +12,32 @@
         this.initHtml();
         this.data = new Data(this);
         this.header = new Header(this);
+        this.sg = new SG(this);
+        this.popup = new Popup(this);
         this.fullContainer();
         this.bindHandlers();
       }
 
       Calendar.prototype.initHtml = function() {
-        this.$saveBtn = $('.save');
-        this.$delBtn = $('.delete');
-        this.$searchQ = $('.search');
-        this.$searchSug = $('.sug');
-        this.$warning = $('.warning');
-        this.$popup = $('.cal__popup');
         this.$elem = $('.container');
       };
 
       Calendar.prototype.bindHandlers = function() {
-        this.$searchQ.bind('keyup', (function(_this) {
-          return function(e) {
-            var data, index, isWords, query, replStr, value;
-            query = $(e.currentTarget).val();
-            data = _this.data.getData();
-            isWords = false;
-            _this.$searchSug.html('');
-            if (query.length > 2) {
-              _this.$searchSug.show();
-              isWords = false;
-              for (index in data) {
-                value = data[index];
-                if (value.descr.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-                  replStr = value.descr.replaceAll(query, "<b>" + query + "</b>");
-                  _this.$searchSug.append("<li data-date='" + index + "'><p>" + replStr + "</p><span>" + (index.split('-')[0]) + " " + utils.monthSklon[index.split('-')[1]] + "</span></li");
-                  isWords = true;
-                } else if (value.name.indexOf(query) >= 0) {
-                  replStr = value.name.replaceAll(query, "<b>" + query + "</b>");
-                  _this.$searchSug.append("<li data-date='" + index + "'><p>" + replStr + "</p><span>" + (index.split('-')[0]) + " " + utils.monthSklon[index.split('-')[1]] + "</span></li");
-                  isWords = true;
-                }
-              }
-              if (!isWords) {
-                _this.$searchSug.hide();
-              }
-            } else {
-              _this.$searchSug.hide();
-            }
-          };
-        })(this));
-        this.$searchSug.on('click', 'li', (function(_this) {
-          return function(e) {
-            var dateMas;
-            dateMas = $(e.currentTarget).attr('data-date').split('-');
-            _this.curDate.setMonth(dateMas[1]);
-            _this.curDate.setYear(dateMas[2]);
-            _this.fullContainer();
-            _this.$searchSug.html('').hide();
-            _this.$searchQ.val('');
-          };
-        })(this));
-        this.$popup.find('.close').on('click', (function(_this) {
-          return function() {
-            _this.hidePopup();
-          };
-        })(this));
-        this.$popup.find('input, textarea').on('blur', (function(_this) {
-          return function(e) {
-            var text;
-            text = $(e.currentTarget).val();
-            $(e.currentTarget).siblings('span').text(text);
-            if (text) {
-              $(e.currentTarget).parent().removeClass('empty');
-            }
-          };
-        })(this));
-        this.$popup.on('click', '.edit span', (function(_this) {
-          return function(e) {
-            var text;
-            text = $(e.currentTarget).text();
-            $(e.currentTarget).parent().addClass('empty').find('input, textarea').val(text).focus();
-          };
-        })(this));
         this.$elem.on('click', '.item', (function(_this) {
           return function(e) {
-            _this.showPopup({
+            _this.popup.showPopup({
               x: e.clientX,
               y: e.clientY
             });
             _this.setCurTd($(e.currentTarget));
-            _this.$popup.find('.date span').text("" + (_this.$curTd.attr('data-date')) + " " + utils.monthSklon[_this.curDate.getMonth()]);
+            _this.popup.$popup.find('.date span').text("" + (_this.$curTd.attr('data-date')) + " " + utils.monthSklon[_this.curDate.getMonth()]);
             if (_this.$curTd.hasClass('full')) {
-              _this.$popup.find('.description').removeClass('empty').find('span').text(_this.$curTd.attr('data-descr'));
-              _this.$popup.find('.name').removeClass('empty').find('span').text(_this.$curTd.attr('data-name'));
+              _this.popup.$popup.find('.description').removeClass('empty').find('span').text(_this.$curTd.attr('data-descr'));
+              _this.popup.$popup.find('.name').removeClass('empty').find('span').text(_this.$curTd.attr('data-name'));
             } else {
-              _this.$popup.find('.description, .name').addClass('empty').find('span').text('');
-              _this.$popup.find('input, textarea').val('');
+              _this.popup.$popup.find('.description, .name').addClass('empty').find('span').text('');
+              _this.popup.$popup.find('input, textarea').val('');
             }
-          };
-        })(this));
-        this.$saveBtn.on('click', (function(_this) {
-          return function() {
-            var description, name;
-            description = _this.$popup.find('.description').find('span').text();
-            name = _this.$popup.find('.name').find('span').text();
-            if (description && name) {
-              _this.saveItem();
-            } else if (!(description || name)) {
-              _this.deleteItem();
-            } else {
-              _this.$warning.addClass('visible');
-            }
-          };
-        })(this));
-        this.$delBtn.on('click', (function(_this) {
-          return function() {
-            _this.deleteItem();
           };
         })(this));
       };
@@ -175,28 +87,11 @@
           }
         }
         this.header.$monthElem.text("" + utils.months[this.curDate.getMonth()] + " " + (this.curDate.getFullYear()));
-        this.$td = this.$elem.find('.item');
-      };
-
-      Calendar.prototype.showPopup = function(opt) {
-        var newX, newY;
-        newX = opt.x;
-        newY = opt.y;
-        this.$popup.css({
-          top: newY - 30,
-          left: newX + 20
-        }).fadeIn(100);
-        this.$warning.removeClass('visible');
-      };
-
-      Calendar.prototype.hidePopup = function() {
-        this.$popup.fadeOut(100);
-        this.setCurTd(null);
       };
 
       Calendar.prototype.saveItem = function() {
         var options;
-        this.$curTd.attr('data-descr', this.$popup.find('.description').find('span').text()).attr('data-name', this.$popup.find('.name').find('span').text()).addClass('full').find('.name').text(this.$popup.find('.name').find('span').text()).siblings('.descr').text(this.$popup.find('.description').find('span').text());
+        this.$curTd.attr('data-descr', this.popup.$popup.find('.description').find('span').text()).attr('data-name', this.popup.$popup.find('.name').find('span').text()).addClass('full').find('.name').text(this.popup.$popup.find('.name').find('span').text()).siblings('.descr').text(this.popup.$popup.find('.description').find('span').text());
         options = {
           day: this.$curTd.attr('data-date'),
           curDate: this.curDate,
@@ -204,8 +99,8 @@
           name: this.$curTd.attr('data-name')
         };
         this.data.setData(options, true);
-        this.$popup.find('input, textarea').val('');
-        this.hidePopup();
+        this.popup.$popup.find('input, textarea').val('');
+        this.popup.hidePopup();
       };
 
       Calendar.prototype.deleteItem = function() {
@@ -216,13 +111,13 @@
           curDate: this.curDate
         };
         this.data.setData(options, false);
-        this.$popup.find('input, textarea').val('');
-        this.hidePopup();
+        this.popup.$popup.find('input, textarea').val('');
+        this.popup.hidePopup();
       };
 
       Calendar.prototype.setCurTd = function($tdElem) {
         this.$curTd = $tdElem;
-        this.$td.removeClass('active');
+        this.$elem.find('.item').removeClass('active');
         if (this.$curTd) {
           this.$curTd.addClass('active');
         }

@@ -12,20 +12,20 @@ define ['jquery'], ($) ->
 		bindHandlers : () ->
 			@$prevBtn.on 'click', () =>
 				@calendar.prevMonth()
-				@calendar.hidePopup()
+				@calendar.popup.hidePopup()
 				@calendar.fullContainer()
 				return
 
 			@$nextBtn.on 'click', () =>
 				@calendar.nextMonth()
-				@calendar.hidePopup()
+				@calendar.popup.hidePopup()
 				@calendar.fullContainer()
 				return
 
 			@$todayBtn.on 'click', () =>
 				@calendar.curDate.setMonth(@calendar.today.getMonth())
 				@calendar.curDate.setYear(@calendar.today.getFullYear())
-				@calendar.hidePopup()
+				@calendar.popup.hidePopup()
 				@calendar.fullContainer()
 				return
 			return

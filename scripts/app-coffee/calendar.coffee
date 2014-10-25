@@ -1,100 +1,34 @@
-define ['jquery', 'utils', 'header', 'data'], ($, utils, Header, Data) ->
+define ['jquery', 'utils', 'header', 'data', 'sg', 'popup'], ($, utils, Header, Data, SG, Popup) ->
 	class Calendar 
 		today		:	new Date()
 		curDate		:	new Date()
-		$td 		: 	null
 		$curTd 		: 	null
 		
 		constructor: () ->
 			@initHtml()
 			@data = new Data(this)
 			@header = new Header(this)
+			@sg = new SG(this)
+			@popup = new Popup(this)
 			@fullContainer()
 			@bindHandlers()
 		initHtml : () ->
-			@$saveBtn 	= 	$('.save')
-			@$delBtn 	= 	$('.delete')
-			@$searchQ 	= 	$('.search')
-			@$searchSug	= 	$('.sug')
-			@$warning 	= 	$('.warning')
-			@$popup 	= 	$('.cal__popup')
-			@$elem 		= 	$('.container')
+			@$elem = $('.container')
 			return
 
-		bindHandlers : () ->
-			@$searchQ.bind 'keyup', (e) =>
-				query = $(e.currentTarget).val()
-				data = @data.getData()
-				isWords = no
-				@$searchSug.html('')
-				if query.length>2
-					@$searchSug.show()
-					isWords = no
-					for index, value of data			
-						if value.descr.toLowerCase().indexOf(query.toLowerCase())>=0
-							replStr = value.descr.replaceAll(query,"<b>#{query}</b>")
-							@$searchSug.append("<li data-date='#{index}'><p>#{replStr}</p><span>#{index.split('-')[0]} #{utils.monthSklon[index.split('-')[1]]}</span></li")
-							isWords = yes
-						else if value.name.indexOf(query)>=0
-							replStr = value.name.replaceAll(query,"<b>#{query}</b>")
-							@$searchSug.append("<li data-date='#{index}'><p>#{replStr}</p><span>#{index.split('-')[0]} #{utils.monthSklon[index.split('-')[1]]}</span></li")
-							isWords = yes
-					@$searchSug.hide() unless isWords
-				else
-					@$searchSug.hide()
-				return
-			
-			@$searchSug.on 'click', 'li', (e)=>
-				dateMas=$(e.currentTarget).attr('data-date').split('-')
-				@curDate.setMonth(dateMas[1])
-				@curDate.setYear(dateMas[2])
-				@fullContainer()
-				@$searchSug.html('').hide()
-				@$searchQ.val('')
-				return
-			
-			@$popup.find('.close').on 'click', () =>
-				@hidePopup()
-				return
-			
-			@$popup.find('input, textarea').on 'blur', (e)=>			
-				text = $(e.currentTarget).val()
-				$(e.currentTarget).siblings('span').text(text) 
-				if text then $(e.currentTarget).parent().removeClass('empty')
-				return
-
-			@$popup.on 'click', '.edit span', (e)=>
-				text = $(e.currentTarget).text()
-				$(e.currentTarget).parent().addClass('empty').find('input, textarea').val(text).focus()
-				return
-			
+		bindHandlers : () ->	
 			@$elem.on 'click', '.item', (e)=> 
-				@showPopup({x:e.clientX,y:e.clientY})
+				@popup.showPopup({x:e.clientX,y:e.clientY})
 				@setCurTd($(e.currentTarget))
-				@$popup.find('.date span').text("#{@$curTd.attr('data-date')} #{utils.monthSklon[@curDate.getMonth()]}")		
+				@popup.$popup.find('.date span').text("#{@$curTd.attr('data-date')} #{utils.monthSklon[@curDate.getMonth()]}")		
 				if @$curTd.hasClass('full')				
-					@$popup.find('.description').removeClass('empty').find('span').text(@$curTd.attr('data-descr'))
-					@$popup.find('.name').removeClass('empty').find('span').text(@$curTd.attr('data-name'))
+					@popup.$popup.find('.description').removeClass('empty').find('span').text(@$curTd.attr('data-descr'))
+					@popup.$popup.find('.name').removeClass('empty').find('span').text(@$curTd.attr('data-name'))
 				else
-					@$popup.find('.description, .name').addClass('empty').find('span').text('')
-					@$popup.find('input, textarea').val('')
+					@popup.$popup.find('.description, .name').addClass('empty').find('span').text('')
+					@popup.$popup.find('input, textarea').val('')
 				return
 			
-			@$saveBtn.on 'click', ()=>
-				description = @$popup.find('.description').find('span').text()
-				name = @$popup.find('.name').find('span').text()
-				if description and name	
-					@saveItem()
-				else unless description or name	
-					@deleteItem()
-				else
-					@$warning.addClass('visible')
-				return		
-
-			@$delBtn.on 'click', ()=>
-				@deleteItem()
-				return
-
 			return
 
 		prevMonth : () ->
@@ -137,28 +71,15 @@ define ['jquery', 'utils', 'header', 'data'], ($, utils, Header, Data) ->
 						.siblings('.descr').text(data[key].descr)
 			
 			@header.$monthElem.text("#{utils.months[@curDate.getMonth()]} #{@curDate.getFullYear()}")
-			@$td = @$elem.find('.item')	
 			return
 			
-		showPopup: (opt) ->
-			newX = opt.x
-			newY = opt.y
-			@$popup.css({ top: newY-30, left: newX+20}).fadeIn(100)
-			@$warning.removeClass('visible')
-			return
-		
-		hidePopup:() ->
-			@$popup.fadeOut(100)
-			@setCurTd(null)
-			return
-
 		saveItem:() ->
 			@$curTd
-				.attr('data-descr',@$popup.find('.description').find('span').text())
-				.attr('data-name',@$popup.find('.name').find('span').text())
+				.attr('data-descr',@popup.$popup.find('.description').find('span').text())
+				.attr('data-name',@popup.$popup.find('.name').find('span').text())
 				.addClass('full')
-				.find('.name').text(@$popup.find('.name').find('span').text())
-				.siblings('.descr').text(@$popup.find('.description').find('span').text())
+				.find('.name').text(@popup.$popup.find('.name').find('span').text())
+				.siblings('.descr').text(@popup.$popup.find('.description').find('span').text())
 			options = {
 				day : @$curTd.attr('data-date')
 				curDate : @curDate
@@ -166,8 +87,8 @@ define ['jquery', 'utils', 'header', 'data'], ($, utils, Header, Data) ->
 				name : @$curTd.attr('data-name')
 			}
 			@data.setData(options, yes)	
-			@$popup.find('input, textarea').val('')			
-			@hidePopup()
+			@popup.$popup.find('input, textarea').val('')			
+			@popup.hidePopup()
 			return 
 
 		deleteItem:() ->
@@ -181,13 +102,13 @@ define ['jquery', 'utils', 'header', 'data'], ($, utils, Header, Data) ->
 				curDate : @curDate
 			}
 			@data.setData(options, no)
-			@$popup.find('input, textarea').val('')
-			@hidePopup()
+			@popup.$popup.find('input, textarea').val('')
+			@popup.hidePopup()
 			return
 
 		setCurTd : ($tdElem) ->
 			@$curTd = $tdElem;
-			@$td.removeClass('active');
+			@$elem.find('.item').removeClass('active');
 			if @$curTd
 				@$curTd.addClass('active');
 			return
