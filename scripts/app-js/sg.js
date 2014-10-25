@@ -16,7 +16,7 @@
       SG.prototype.bindHandlers = function() {
         this.$searchQ.bind('keyup', (function(_this) {
           return function(e) {
-            var data, index, isWords, query, replStr, value;
+            var data, index, isWords, query, value;
             query = $(e.currentTarget).val();
             data = _this.calendar.data.getData();
             isWords = false;
@@ -27,12 +27,10 @@
               for (index in data) {
                 value = data[index];
                 if (value.descr.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-                  replStr = value.descr.replaceAll(query, "<b>" + query + "</b>");
-                  _this.$searchSug.append("<li data-date='" + index + "'><p>" + replStr + "</p><span>" + (index.split('-')[0]) + " " + utils.monthSklon[index.split('-')[1]] + "</span></li");
+                  _this.appendSgItem(value.descr, query, index);
                   isWords = true;
-                } else if (value.name.indexOf(query) >= 0) {
-                  replStr = value.name.replaceAll(query, "<b>" + query + "</b>");
-                  _this.$searchSug.append("<li data-date='" + index + "'><p>" + replStr + "</p><span>" + (index.split('-')[0]) + " " + utils.monthSklon[index.split('-')[1]] + "</span></li");
+                } else if (value.name.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+                  _this.appendSgItem(value.name, query, index);
                   isWords = true;
                 }
               }
@@ -56,6 +54,12 @@
             _this.$searchQ.val('');
           };
         })(this));
+      };
+
+      SG.prototype.appendSgItem = function(text, query, date) {
+        var replStr;
+        replStr = text.replaceAll(query, "<b>" + query + "</b>");
+        this.$searchSug.append("<li data-date='" + date + "'><p>" + replStr + "</p><span>" + (date.split('-')[0]) + " " + utils.monthSklon[date.split('-')[1]] + "</span></li");
       };
 
       return SG;

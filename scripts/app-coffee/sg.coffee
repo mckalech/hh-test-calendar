@@ -18,12 +18,10 @@ define ['jquery','utils'], ($, utils) ->
 					isWords = no
 					for index, value of data			
 						if value.descr.toLowerCase().indexOf(query.toLowerCase())>=0
-							replStr = value.descr.replaceAll(query,"<b>#{query}</b>")
-							@$searchSug.append("<li data-date='#{index}'><p>#{replStr}</p><span>#{index.split('-')[0]} #{utils.monthSklon[index.split('-')[1]]}</span></li")
+							@appendSgItem(value.descr, query, index)
 							isWords = yes
-						else if value.name.indexOf(query)>=0
-							replStr = value.name.replaceAll(query,"<b>#{query}</b>")
-							@$searchSug.append("<li data-date='#{index}'><p>#{replStr}</p><span>#{index.split('-')[0]} #{utils.monthSklon[index.split('-')[1]]}</span></li")
+						else if value.name.toLowerCase().indexOf(query.toLowerCase())>=0
+							@appendSgItem(value.name, query, index)
 							isWords = yes
 					@$searchSug.hide() unless isWords
 				else
@@ -40,6 +38,11 @@ define ['jquery','utils'], ($, utils) ->
 				@$searchQ.val('')
 				return
 			return
+		appendSgItem : (text, query, date) ->
+			replStr = text.replaceAll(query,"<b>#{query}</b>")
+			@$searchSug.append("<li data-date='#{date}'><p>#{replStr}</p><span>#{date.split('-')[0]} #{utils.monthSklon[date.split('-')[1]]}</span></li")
+			return
+							
 	return SG
 
 
