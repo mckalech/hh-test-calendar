@@ -1,5 +1,5 @@
 (function() {
-  define(['jquery', 'utils', 'header', 'data', 'sg', 'popup'], function($, utils, Header, Data, SG, Popup) {
+  define(['jquery', 'underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!../templates/table.html'], function($, _, utils, Header, Data, SG, Popup, tableTemplate) {
     var Calendar;
     Calendar = (function() {
       Calendar.prototype.today = new Date();
@@ -55,7 +55,7 @@
       };
 
       Calendar.prototype.fullContainer = function() {
-        var d, data, dateMas, dayText, i, j, key, m, newTd, y, _i, _j, _ref;
+        var d, data, dateMas, dayText, html, i, j, key, m, newTd, y, _i, _j, _ref;
         d = 1;
         data = this.data.getData();
         this.$elem.html('<table id="main-table" />');
@@ -87,6 +87,7 @@
             this.$elem.find("td[data-date='" + d + "']").attr('data-descr', data[key].descr).attr('data-name', data[key].name).addClass('full').find('.name').text(data[key].name).siblings('.descr').text(data[key].descr);
           }
         }
+        html = _.template(tableTemplate)(data);
         this.header.$monthElem.text("" + utils.months[this.curDate.getMonth()] + " " + (this.curDate.getFullYear()));
       };
 

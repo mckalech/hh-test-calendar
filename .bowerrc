@@ -1,4 +1,4 @@
 {
-  "directory": "scripts/libs",
-  "componentsDirectory": "scripts/libs"
+  "directory": "public/scripts/libs",
+  "componentsDirectory": "public/scripts/libs"
 }

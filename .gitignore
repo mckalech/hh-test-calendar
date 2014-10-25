@@ -4,8 +4,8 @@
 node_modules/
 
 # sass cache
-.sass-cache/
+public/.sass-cache/
 
 
 # bower
-scripts/libs/
+public/scripts/libs/

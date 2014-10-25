@@ -1,4 +1,4 @@
-define ['jquery', 'utils', 'header', 'data', 'sg', 'popup'], ($, utils, Header, Data, SG, Popup) ->
+define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!../templates/table.html'], ($, _, utils, Header, Data, SG, Popup, tableTemplate) ->
 	class Calendar 
 		today		:	new Date()
 		curDate		:	new Date()
@@ -73,6 +73,8 @@ define ['jquery', 'utils', 'header', 'data', 'sg', 'popup'], ($, utils, Header, 
 						.attr('data-name',data[key].name)
 						.addClass('full').find('.name').text(data[key].name)
 						.siblings('.descr').text(data[key].descr)
+
+			html = _.template(tableTemplate)(data)
 			
 			@header.$monthElem.text("#{utils.months[@curDate.getMonth()]} #{@curDate.getFullYear()}")
 			return
