@@ -1,7 +1,9 @@
 (function() {
-  define(['jquery'], function($) {
+  define(['jquery', 'utils'], function($, utils) {
     var Popup;
     Popup = (function() {
+      Popup.prototype.date = null;
+
       function Popup(calendar) {
         this.calendar = calendar;
         this.initHtml();
@@ -12,7 +14,10 @@
         this.$saveBtn = $('.save');
         this.$delBtn = $('.delete');
         this.$warning = $('.warning');
-        return this.$popup = $('.cal__popup');
+        this.$popup = $('.cal__popup');
+        this.$description = this.$popup.find('.description');
+        this.$name = this.$popup.find('.name');
+        return this.$date = this.$popup.find('.date span');
       };
 
       Popup.prototype.bindHandlers = function() {
@@ -41,12 +46,18 @@
         this.$saveBtn.on('click', (function(_this) {
           return function() {
             var description, name;
-            description = _this.$popup.find('.description').find('span').text();
-            name = _this.$popup.find('.name').find('span').text();
+            description = _this.$description.find('span').text();
+            name = _this.$name.find('span').text();
             if (description && name) {
-              _this.calendar.saveItem();
+              _this.calendar.saveItem({
+                name: name,
+                description: description,
+                date: _this.date
+              });
             } else if (!(description || name)) {
-              _this.calendar.deleteItem();
+              _this.calendar.deleteItem({
+                date: _this.date
+              });
             } else {
               _this.$warning.addClass('visible');
             }
@@ -54,15 +65,29 @@
         })(this));
         this.$delBtn.on('click', (function(_this) {
           return function() {
-            _this.calendar.deleteItem();
+            _this.calendar.deleteItem({
+              date: _this.date
+            });
           };
         })(this));
       };
 
       Popup.prototype.showPopup = function(opt) {
-        var newX, newY;
+        var description, full, name, newX, newY;
         newX = opt.x;
         newY = opt.y;
+        this.date = opt.date;
+        full = opt.full;
+        description = opt.description;
+        name = opt.name;
+        this.$date.text("" + (this.date.getDate()) + " " + utils.monthSklon[this.date.getMonth()]);
+        if (full) {
+          this.$description.removeClass('empty').find('span').text(description);
+          this.$name.removeClass('empty').find('span').text(name);
+        } else {
+          this.$description.add(this.$name).addClass('empty').find('span').text('');
+          this.$popup.find('input, textarea').val('');
+        }
         this.$popup.css({
           top: newY - 30,
           left: newX + 20

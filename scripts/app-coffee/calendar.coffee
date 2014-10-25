@@ -18,18 +18,21 @@ define ['jquery', 'utils', 'header', 'data', 'sg', 'popup'], ($, utils, Header, 
 
 		bindHandlers : () ->	
 			@$elem.on 'click', '.item', (e)=> 
+				$currentCell = $(e.currentTarget)
+				date = new Date(@curDate)
+				date.setDate($currentCell.attr('data-date'))
 				@hideElements({hideSg:yes})
-				@popup.showPopup({x:e.clientX,y:e.clientY})
-				@setCurTd($(e.currentTarget))
-				@popup.$popup.find('.date span').text("#{@$curTd.attr('data-date')} #{utils.monthSklon[@curDate.getMonth()]}")		
-				if @$curTd.hasClass('full')				
-					@popup.$popup.find('.description').removeClass('empty').find('span').text(@$curTd.attr('data-descr'))
-					@popup.$popup.find('.name').removeClass('empty').find('span').text(@$curTd.attr('data-name'))
-				else
-					@popup.$popup.find('.description, .name').addClass('empty').find('span').text('')
-					@popup.$popup.find('input, textarea').val('')
+				options = {
+					x : e.clientX
+					y : e.clientY
+					date : date
+					full : $currentCell.hasClass('full')	
+					description : $currentCell.attr('data-descr')
+					name : $currentCell.attr('data-name')
+				}
+				@popup.showPopup(options)
+				@setCurTd($currentCell)
 				return
-			
 			return
 
 		prevMonth : () ->
@@ -74,35 +77,39 @@ define ['jquery', 'utils', 'header', 'data', 'sg', 'popup'], ($, utils, Header, 
 			@header.$monthElem.text("#{utils.months[@curDate.getMonth()]} #{@curDate.getFullYear()}")
 			return
 			
-		saveItem:() ->
+		saveItem:(options) ->
+			name = options.name
+			description = options.description
+			date = options.date
+
 			@$curTd
-				.attr('data-descr',@popup.$popup.find('.description').find('span').text())
-				.attr('data-name',@popup.$popup.find('.name').find('span').text())
+				.attr('data-descr', description)
+				.attr('data-name', name)
 				.addClass('full')
-				.find('.name').text(@popup.$popup.find('.name').find('span').text())
-				.siblings('.descr').text(@popup.$popup.find('.description').find('span').text())
-			options = {
-				day : @$curTd.attr('data-date')
-				curDate : @curDate
-				descr : @$curTd.attr('data-descr')
-				name : @$curTd.attr('data-name')
+				.find('.name').text(name)
+				.siblings('.descr').text(description)
+			opt = {
+				day : date.getDate()
+				curDate : date
+				descr : description
+				name : name
 			}
-			@data.setData(options, yes)	
+			@data.setData(opt, yes)	
 			@popup.$popup.find('input, textarea').val('')			
 			@hideElements({hidePopup:yes})
 			return 
 
-		deleteItem:() ->
+		deleteItem:(options) ->
 			@$curTd
 				.removeAttr('data-descr')
 				.removeAttr('data-name')
 				.removeClass('full')
 				.find('p').text('')
-			options = {
-				day : @$curTd.attr('data-date')
-				curDate : @curDate
+			opt = {
+				day : options.date.getDate()
+				curDate : options.date
 			}
-			@data.setData(options, no)
+			@data.setData(opt, no)
 			@popup.$popup.find('input, textarea').val('')
 			@hideElements({hidePopup:yes})
 			return

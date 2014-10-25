@@ -33,11 +33,11 @@
               isWords = false;
               for (index in data) {
                 value = data[index];
-                if (value.descr.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-                  _this.appendSgItem(value.descr, query, index);
-                  isWords = true;
-                } else if (value.name.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+                if (value.name.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
                   _this.appendSgItem(value.name, query, index);
+                  isWords = true;
+                } else if (value.descr.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+                  _this.appendSgItem(value.descr, query, index);
                   isWords = true;
                 }
               }

@@ -21,11 +21,11 @@ define ['jquery','utils'], ($, utils) ->
 					@$searchSug.show()
 					isWords = no
 					for index, value of data			
-						if value.descr.toLowerCase().indexOf(query.toLowerCase())>=0
-							@appendSgItem(value.descr, query, index)
-							isWords = yes
-						else if value.name.toLowerCase().indexOf(query.toLowerCase())>=0
+						if value.name.toLowerCase().indexOf(query.toLowerCase())>=0
 							@appendSgItem(value.name, query, index)
+							isWords = yes
+						else if value.descr.toLowerCase().indexOf(query.toLowerCase())>=0
+							@appendSgItem(value.descr, query, index)
 							isWords = yes
 					@hideSG() unless isWords
 				else

@@ -25,22 +25,23 @@
       Calendar.prototype.bindHandlers = function() {
         this.$elem.on('click', '.item', (function(_this) {
           return function(e) {
+            var $currentCell, date, options;
+            $currentCell = $(e.currentTarget);
+            date = new Date(_this.curDate);
+            date.setDate($currentCell.attr('data-date'));
             _this.hideElements({
               hideSg: true
             });
-            _this.popup.showPopup({
+            options = {
               x: e.clientX,
-              y: e.clientY
-            });
-            _this.setCurTd($(e.currentTarget));
-            _this.popup.$popup.find('.date span').text("" + (_this.$curTd.attr('data-date')) + " " + utils.monthSklon[_this.curDate.getMonth()]);
-            if (_this.$curTd.hasClass('full')) {
-              _this.popup.$popup.find('.description').removeClass('empty').find('span').text(_this.$curTd.attr('data-descr'));
-              _this.popup.$popup.find('.name').removeClass('empty').find('span').text(_this.$curTd.attr('data-name'));
-            } else {
-              _this.popup.$popup.find('.description, .name').addClass('empty').find('span').text('');
-              _this.popup.$popup.find('input, textarea').val('');
-            }
+              y: e.clientY,
+              date: date,
+              full: $currentCell.hasClass('full'),
+              description: $currentCell.attr('data-descr'),
+              name: $currentCell.attr('data-name')
+            };
+            _this.popup.showPopup(options);
+            _this.setCurTd($currentCell);
           };
         })(this));
       };
@@ -92,30 +93,33 @@
         this.header.$monthElem.text("" + utils.months[this.curDate.getMonth()] + " " + (this.curDate.getFullYear()));
       };
 
-      Calendar.prototype.saveItem = function() {
-        var options;
-        this.$curTd.attr('data-descr', this.popup.$popup.find('.description').find('span').text()).attr('data-name', this.popup.$popup.find('.name').find('span').text()).addClass('full').find('.name').text(this.popup.$popup.find('.name').find('span').text()).siblings('.descr').text(this.popup.$popup.find('.description').find('span').text());
-        options = {
-          day: this.$curTd.attr('data-date'),
-          curDate: this.curDate,
-          descr: this.$curTd.attr('data-descr'),
-          name: this.$curTd.attr('data-name')
+      Calendar.prototype.saveItem = function(options) {
+        var date, description, name, opt;
+        name = options.name;
+        description = options.description;
+        date = options.date;
+        this.$curTd.attr('data-descr', description).attr('data-name', name).addClass('full').find('.name').text(name).siblings('.descr').text(description);
+        opt = {
+          day: date.getDate(),
+          curDate: date,
+          descr: description,
+          name: name
         };
-        this.data.setData(options, true);
+        this.data.setData(opt, true);
         this.popup.$popup.find('input, textarea').val('');
         this.hideElements({
           hidePopup: true
         });
       };
 
-      Calendar.prototype.deleteItem = function() {
-        var options;
+      Calendar.prototype.deleteItem = function(options) {
+        var opt;
         this.$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('full').find('p').text('');
-        options = {
-          day: this.$curTd.attr('data-date'),
-          curDate: this.curDate
+        opt = {
+          day: options.date.getDate(),
+          curDate: options.date
         };
-        this.data.setData(options, false);
+        this.data.setData(opt, false);
         this.popup.$popup.find('input, textarea').val('');
         this.hideElements({
           hidePopup: true
