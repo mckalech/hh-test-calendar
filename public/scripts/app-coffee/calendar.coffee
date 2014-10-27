@@ -44,23 +44,15 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			return
 			
 		fullContainer : () ->
-			d=1
 			data = @data.getData()
-			@$elem.html('<table id="main-table" />');
-			for i in [0...@curDate.weeksInMonth()]		
-				
-				@$elem.find('table').append('<tr />')
-				j = 0
-				while j<@curDate.firstDayInMonth() and i==0 					
-					@$elem.find('tr').append("<td><div class='date'>#{utils.days[j]}</div></td>")
-					j++
-				
-				for j in [j...7]
-					newTd = $('<td />').appendTo(@$elem.find('tr').last())
-					if d>@curDate.daysInMonth() then continue					
-					dayText =  if i==0 then "#{utils.days[j]}, #{d}" else d					
-					newTd.append("<div class='date'>#{dayText}</div><p class='name'></p><p class='descr'></p>").attr('data-date',d).addClass('item').addClass(if d==@today.getDate() and @curDate.getMonth()==@today.getMonth() and @curDate.getYear()==@today.getYear() then 'today' else '');
-					d++
+			templateData = {
+				weeksInMonth : @curDate.weeksInMonth()
+				firstDayInMonth : @curDate.firstDayInMonth()
+				daysInMonth : @curDate.daysInMonth()
+				utils : utils
+			}
+			$table = _.template(tableTemplate)(templateData)
+			@$elem.html($table)
 			
 			for key of data		
 				dateMas = key.split('-').map((el)->parseInt(el))
@@ -74,7 +66,8 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 						.addClass('full').find('.name').text(data[key].name)
 						.siblings('.descr').text(data[key].descr)
 
-			html = _.template(tableTemplate)(data)
+
+
 			
 			@header.$monthElem.text("#{utils.months[@curDate.getMonth()]} #{@curDate.getFullYear()}")
 			return

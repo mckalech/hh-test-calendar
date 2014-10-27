@@ -55,27 +55,16 @@
       };
 
       Calendar.prototype.fullContainer = function() {
-        var d, data, dateMas, dayText, html, i, j, key, m, newTd, y, _i, _j, _ref;
-        d = 1;
+        var $table, d, data, dateMas, key, m, templateData, y;
         data = this.data.getData();
-        this.$elem.html('<table id="main-table" />');
-        for (i = _i = 0, _ref = this.curDate.weeksInMonth(); 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-          this.$elem.find('table').append('<tr />');
-          j = 0;
-          while (j < this.curDate.firstDayInMonth() && i === 0) {
-            this.$elem.find('tr').append("<td><div class='date'>" + utils.days[j] + "</div></td>");
-            j++;
-          }
-          for (j = _j = j; j <= 7 ? _j < 7 : _j > 7; j = j <= 7 ? ++_j : --_j) {
-            newTd = $('<td />').appendTo(this.$elem.find('tr').last());
-            if (d > this.curDate.daysInMonth()) {
-              continue;
-            }
-            dayText = i === 0 ? "" + utils.days[j] + ", " + d : d;
-            newTd.append("<div class='date'>" + dayText + "</div><p class='name'></p><p class='descr'></p>").attr('data-date', d).addClass('item').addClass(d === this.today.getDate() && this.curDate.getMonth() === this.today.getMonth() && this.curDate.getYear() === this.today.getYear() ? 'today' : '');
-            d++;
-          }
-        }
+        templateData = {
+          weeksInMonth: this.curDate.weeksInMonth(),
+          firstDayInMonth: this.curDate.firstDayInMonth(),
+          daysInMonth: this.curDate.daysInMonth(),
+          utils: utils
+        };
+        $table = _.template(tableTemplate)(templateData);
+        this.$elem.html($table);
         for (key in data) {
           dateMas = key.split('-').map(function(el) {
             return parseInt(el);
@@ -87,7 +76,6 @@
             this.$elem.find("td[data-date='" + d + "']").attr('data-descr', data[key].descr).attr('data-name', data[key].name).addClass('full').find('.name').text(data[key].name).siblings('.descr').text(data[key].descr);
           }
         }
-        html = _.template(tableTemplate)(data);
         this.header.$monthElem.text("" + utils.months[this.curDate.getMonth()] + " " + (this.curDate.getFullYear()));
       };
 

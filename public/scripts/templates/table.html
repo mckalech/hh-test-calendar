@@ -1,3 +1,21 @@
-<table id="main-table" />
-	
+<table id="main-table">
+	<% var i,j,dayText,d=1 %>
+	<% for(i=0;i<weeksInMonth;i++) { %>
+		<tr>
+			<% j=0 %>
+			<% while (j<firstDayInMonth && i===0) { %>
+				<td><div class='date'><%= utils.days[j] %></div></td>
+				<% j++ %>
+			<% } %>
+			<% for(;j<7;j++,d++) { %>
+				<% if (d>daysInMonth) {%><td></td><% continue } %>
+				<% dayText = i===0 ? utils.days[j]+", "+d : d %>
+				<td class="item" data-date="<%=d%>">
+					<div class='date'><%= dayText %></div>
+					<p class='name'></p>
+					<p class='descr'></p>
+				</td>
+			<% } %>
+		</tr>
+	<% } %>
 </table>
