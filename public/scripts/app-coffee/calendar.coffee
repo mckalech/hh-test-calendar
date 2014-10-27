@@ -72,10 +72,10 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			@header.$monthElem.text("#{utils.months[@curDate.getMonth()]} #{@curDate.getFullYear()}")
 			return
 			
-		saveItem:(options) ->
-			name = options.name
-			description = options.description
-			date = options.date
+		saveItem:(item) ->
+			name = item.name
+			description = item.description
+			date = item.date
 
 			@$curTd
 				.attr('data-descr', description)
@@ -83,28 +83,28 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 				.addClass('full')
 				.find('.name').text(name)
 				.siblings('.descr').text(description)
-			opt = {
+			savedData = {
 				day : date.getDate()
 				curDate : date
 				descr : description
 				name : name
 			}
-			@data.setData(opt, yes)	
+			@data.setData(savedData, yes)	
 			@popup.$popup.find('input, textarea').val('')			
 			@hideElements({hidePopup:yes})
 			return 
 
-		deleteItem:(options) ->
+		deleteItem:(item) ->
 			@$curTd
 				.removeAttr('data-descr')
 				.removeAttr('data-name')
 				.removeClass('full')
 				.find('p').text('')
-			opt = {
-				day : options.date.getDate()
-				curDate : options.date
+			savedData = {
+				day : item.date.getDate()
+				curDate : item.date
 			}
-			@data.setData(opt, no)
+			@data.setData(savedData, no)
 			@popup.$popup.find('input, textarea').val('')
 			@hideElements({hidePopup:yes})
 			return

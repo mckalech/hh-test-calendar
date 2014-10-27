@@ -79,33 +79,33 @@
         this.header.$monthElem.text("" + utils.months[this.curDate.getMonth()] + " " + (this.curDate.getFullYear()));
       };
 
-      Calendar.prototype.saveItem = function(options) {
-        var date, description, name, opt;
-        name = options.name;
-        description = options.description;
-        date = options.date;
+      Calendar.prototype.saveItem = function(item) {
+        var date, description, name, savedData;
+        name = item.name;
+        description = item.description;
+        date = item.date;
         this.$curTd.attr('data-descr', description).attr('data-name', name).addClass('full').find('.name').text(name).siblings('.descr').text(description);
-        opt = {
+        savedData = {
           day: date.getDate(),
           curDate: date,
           descr: description,
           name: name
         };
-        this.data.setData(opt, true);
+        this.data.setData(savedData, true);
         this.popup.$popup.find('input, textarea').val('');
         this.hideElements({
           hidePopup: true
         });
       };
 
-      Calendar.prototype.deleteItem = function(options) {
-        var opt;
+      Calendar.prototype.deleteItem = function(item) {
+        var savedData;
         this.$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('full').find('p').text('');
-        opt = {
-          day: options.date.getDate(),
-          curDate: options.date
+        savedData = {
+          day: item.date.getDate(),
+          curDate: item.date
         };
-        this.data.setData(opt, false);
+        this.data.setData(savedData, false);
         this.popup.$popup.find('input, textarea').val('');
         this.hideElements({
           hidePopup: true
