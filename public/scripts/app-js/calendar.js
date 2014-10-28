@@ -55,28 +55,33 @@
       };
 
       Calendar.prototype.fullContainer = function() {
-        var $table, d, data, dateMas, key, m, templateData, y;
+        var $table, data, dataItem, dataKey, dateArray, itemDate, monthDataArray, templateData;
         data = this.data.getData();
+        monthDataArray = [];
+        for (dataKey in data) {
+          dateArray = dataKey.split('-').map(function(el) {
+            return parseInt(el);
+          });
+          itemDate = {
+            day: dateArray[0],
+            month: dateArray[1],
+            year: dateArray[2]
+          };
+          dataItem = data[dataKey];
+          if (dataItem && this.curDate.getMonth() === itemDate.month && this.curDate.getFullYear() === itemDate.year) {
+            monthDataArray[itemDate.day] = dataItem;
+          }
+        }
         templateData = {
           weeksInMonth: this.curDate.weeksInMonth(),
           firstDayInMonth: this.curDate.firstDayInMonth(),
           daysInMonth: this.curDate.daysInMonth(),
+          monthDataArray: monthDataArray,
           utils: utils
         };
         $table = _.template(tableTemplate)(templateData);
         this.$elem.html($table);
-        for (key in data) {
-          dateMas = key.split('-').map(function(el) {
-            return parseInt(el);
-          });
-          d = dateMas[0];
-          m = dateMas[1];
-          y = dateMas[2];
-          if (data[key] && this.curDate.getMonth() === m && this.curDate.getFullYear() === y) {
-            this.$elem.find("td[data-date='" + d + "']").attr('data-descr', data[key].descr).attr('data-name', data[key].name).addClass('full').find('.name').text(data[key].name).siblings('.descr').text(data[key].descr);
-          }
-        }
-        this.header.$monthElem.text("" + utils.months[this.curDate.getMonth()] + " " + (this.curDate.getFullYear()));
+        this.header.setDateText(this.curDate.getMonth(), this.curDate.getFullYear());
       };
 
       Calendar.prototype.saveItem = function(item) {

@@ -1,5 +1,5 @@
 (function() {
-  define(['jquery'], function($) {
+  define(['jquery', 'utils'], function($, utils) {
     var Header;
     Header = (function() {
       function Header(calendar) {
@@ -47,6 +47,10 @@
             _this.calendar.fullContainer();
           };
         })(this));
+      };
+
+      Header.prototype.setDateText = function(month, year) {
+        return this.$monthElem.text("" + utils.months[month] + " " + year);
       };
 
       return Header;

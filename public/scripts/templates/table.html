@@ -10,11 +10,19 @@
 			<% for(;j<7;j++,d++) { %>
 				<% if (d>daysInMonth) {%><td></td><% continue } %>
 				<% dayText = i===0 ? utils.days[j]+", "+d : d %>
-				<td class="item" data-date="<%=d%>">
-					<div class='date'><%= dayText %></div>
-					<p class='name'></p>
-					<p class='descr'></p>
-				</td>
+				<% if (monthDataArray[d]) { %> 
+					<td class="item full" data-date="<%=d%>" data-name="<%=monthDataArray[d].name %>" data-descr="<%=monthDataArray[d].descr %>">
+						<div class='date'><%= dayText %></div>
+						<p class='name'><%= monthDataArray[d].name %></p>
+						<p class='descr'><%= monthDataArray[d].descr %></p>
+					</td>
+				<% }else {%>
+					<td class="item" data-date="<%=d%>">
+						<div class='date'><%= dayText %></div>
+						<p class='name'></p>
+						<p class='descr'></p>
+					</td>
+				<% } %>
 			<% } %>
 		</tr>
 	<% } %>

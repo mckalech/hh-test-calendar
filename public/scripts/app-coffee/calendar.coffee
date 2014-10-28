@@ -45,31 +45,27 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			
 		fullContainer : () ->
 			data = @data.getData()
+			monthDataArray = []
+			for dataKey of data		
+				dateArray = dataKey.split('-').map((el)->parseInt(el))
+				itemDate = {
+					day : dateArray[0]
+					month : dateArray[1]
+					year : dateArray[2]
+				}
+				dataItem = data[dataKey]
+				if dataItem and @curDate.getMonth()==itemDate.month and @curDate.getFullYear()==itemDate.year
+					monthDataArray[itemDate.day] = dataItem
 			templateData = {
 				weeksInMonth : @curDate.weeksInMonth()
 				firstDayInMonth : @curDate.firstDayInMonth()
 				daysInMonth : @curDate.daysInMonth()
+				monthDataArray : monthDataArray
 				utils : utils
 			}
 			$table = _.template(tableTemplate)(templateData)
 			@$elem.html($table)
-			
-			for key of data		
-				dateMas = key.split('-').map((el)->parseInt(el))
-				d = dateMas[0]
-				m = dateMas[1]
-				y = dateMas[2]
-				if data[key] and @curDate.getMonth()==m and @curDate.getFullYear()==y
-					@$elem.find("td[data-date='#{d}']")
-						.attr('data-descr',data[key].descr)
-						.attr('data-name',data[key].name)
-						.addClass('full').find('.name').text(data[key].name)
-						.siblings('.descr').text(data[key].descr)
-
-
-
-			
-			@header.$monthElem.text("#{utils.months[@curDate.getMonth()]} #{@curDate.getFullYear()}")
+			@header.setDateText(@curDate.getMonth(),@curDate.getFullYear())
 			return
 			
 		saveItem:(item) ->

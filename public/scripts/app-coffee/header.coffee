@@ -1,4 +1,4 @@
-define ['jquery'], ($) ->
+define ['jquery', 'utils'], ($, utils) ->
 	class Header 
 		constructor: (calendar) ->
 			@calendar = calendar
@@ -29,6 +29,9 @@ define ['jquery'], ($) ->
 				@calendar.fullContainer()
 				return
 			return
+		setDateText : (month, year)->
+			@$monthElem.text("#{utils.months[month]} #{year}")
+
 
 
 	return Header
