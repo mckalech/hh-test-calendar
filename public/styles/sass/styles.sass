@@ -212,7 +212,7 @@ body
 
 
 
-.cal__popup
+.b-popup
 	position: fixed
 	top: 0
 	left: 0
@@ -234,7 +234,7 @@ body
 		height: 350px
 		padding: 20px
 
-	.close
+	.b-popup__close
 		position: absolute
 		top: 10px
 		right: 10px
@@ -245,7 +245,7 @@ body
 	p 
 		margin: 10px 0
 		
-		&.date span
+		&.b-popup__date span
 			font-size: 15px
 			height: 20px
 			font-weight: 300
@@ -271,7 +271,7 @@ body
 		width: 196px
 		padding: 2px
 	
-	.empty
+	.b-popup__edit_empty
 		input, textarea
 			display: block	
 		
@@ -285,35 +285,33 @@ body
 		height: 27px
 		line-height: 25px
 	
-	.description span
+	.b-popup__edit_description span
 		
 		height: 206px
 		overflow: auto
+		font-size: 12px
 
 	
-	.name span
+	.b-popup__edit_name span
 		font-weight: bold
 	
-	.save
+	.b-popup__btn
 		cursor: pointer
 		border: 1px solid #d2d2d2
 		padding: 2px 4px
 		border-radius: 3px
-		float: left	
-		background: #b5f0b5
+		&.b-popup__btn_save
+			float: left	
+			background: #b5f0b5
+		
+		&.b-popup__btn_delete
+			float: right
+			background: #f0b5b5
 	
-	.delete
-		cursor: pointer
-		border: 1px solid #d2d2d2
-		padding: 2px 4px
-		border-radius: 3px
-		float: right
-		background: #f0b5b5
-	
-	.warning-wrapper
+	.b-popup__warning-wrapper
 		height: 25px
 	
-	.warning
+	.b-popup__warning
 		color: red
 		display: none
 		font-size: 11px

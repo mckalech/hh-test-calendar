@@ -23,8 +23,6 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 				date.setDate($currentCell.attr('data-date'))
 				@hideElements({hideSg:yes})
 				options = {
-					x : e.clientX
-					y : e.clientY
 					date : date
 					full : $currentCell.hasClass('full')	
 					description : $currentCell.attr('data-descr')
@@ -78,7 +76,7 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 				name : name
 			}
 			@data.setData(savedData, yes)	
-			@popup.$popup.find('input, textarea').val('')			
+			@popup.clearInputs()		
 			@hideElements({hidePopup:yes})
 			return 
 
@@ -90,7 +88,7 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 				curDate : item.date
 			}
 			@data.setData(savedData, no)
-			@popup.$popup.find('input, textarea').val('')
+			@popup.clearInputs()
 			@hideElements({hidePopup:yes})
 			return
 

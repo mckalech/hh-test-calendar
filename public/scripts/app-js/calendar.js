@@ -33,8 +33,6 @@
               hideSg: true
             });
             options = {
-              x: e.clientX,
-              y: e.clientY,
               date: date,
               full: $currentCell.hasClass('full'),
               description: $currentCell.attr('data-descr'),
@@ -97,7 +95,7 @@
           name: name
         };
         this.data.setData(savedData, true);
-        this.popup.$popup.find('input, textarea').val('');
+        this.popup.clearInputs();
         this.hideElements({
           hidePopup: true
         });
@@ -111,7 +109,7 @@
           curDate: item.date
         };
         this.data.setData(savedData, false);
-        this.popup.$popup.find('input, textarea').val('');
+        this.popup.clearInputs();
         this.hideElements({
           hidePopup: true
         });

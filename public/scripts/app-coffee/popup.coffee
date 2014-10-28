@@ -6,20 +6,20 @@ define ['jquery', 'utils'], ($, utils) ->
 			@initHtml()
 			@bindHandlers()
 		initHtml : () ->
-			@$saveBtn 		= 	$('.save')
-			@$delBtn 		= 	$('.delete')
-			@$warning 		= 	$('.warning')
-			@$popup 		= 	$('.cal__popup')
-			@$description 	= 	@$popup.find('.description')
-			@$name 			= 	@$popup.find('.name')
-			@$date 			= 	@$popup.find('.date span')
+			@$saveBtn 		= 	$('.b-popup__btn_save')
+			@$delBtn 		= 	$('.b-popup__btn_delete')
+			@$warning 		= 	$('.b-popup__warning')
+			@$popup 		= 	$('.b-popup')
+			@$description 	= 	@$popup.find('.b-popup__edit_description')
+			@$name 			= 	@$popup.find('.b-popup__edit_name')
+			@$date 			= 	@$popup.find('.b-popup__date span')
 		bindHandlers : () ->
-			@$popup.find('.close').on 'click', () =>
+			@$popup.find('.b-popup__close').on 'click', () =>
 				@hidePopup()
 				return
 
 			@$popup.on 'click',(e)=>
-				if $(e.target).hasClass('cal__popup')
+				if $(e.target).hasClass('b-popup')
 		            @hidePopup()
 		        return
 
@@ -32,12 +32,12 @@ define ['jquery', 'utils'], ($, utils) ->
 			@$popup.find('input, textarea').on 'blur', (e)=>			
 				text = $(e.currentTarget).val()
 				$(e.currentTarget).siblings('span').text(text) 
-				if text then $(e.currentTarget).parent().removeClass('empty')
+				if text then $(e.currentTarget).parent().removeClass('b-popup__edit_empty')
 				return
 
-			@$popup.on 'click', '.edit span', (e)=>
+			@$popup.on 'click', '.b-popup__edit span', (e)=>
 				text = $(e.currentTarget).text()
-				$(e.currentTarget).parent().addClass('empty').find('input, textarea').val(text).focus()
+				$(e.currentTarget).parent().addClass('b-popup__edit_empty').find('input, textarea').val(text).focus()
 				return
 
 			@$saveBtn.on 'click', ()=>
@@ -62,8 +62,6 @@ define ['jquery', 'utils'], ($, utils) ->
 			return
 			
 		showPopup: (opt) ->
-			newX = opt.x
-			newY = opt.y
 			@date = opt.date
 			full = opt.full
 			description = opt.description
@@ -72,11 +70,11 @@ define ['jquery', 'utils'], ($, utils) ->
 			$('body').addClass('body-block');
 			@$date.text("#{@date.getDate()} #{utils.monthSklon[@date.getMonth()]}")	
 			if full			
-				@$description.removeClass('empty').find('span').text(description)
-				@$name.removeClass('empty').find('span').text(name)
+				@$description.removeClass('b-popup__edit_empty').find('span').text(description)
+				@$name.removeClass('b-popup__edit_empty').find('span').text(name)
 			else
-				@$description.add(@$name).addClass('empty').find('span').text('')
-				@$popup.find('input, textarea').val('')
+				@$description.add(@$name).addClass('b-popup__edit_empty').find('span').text('')
+				@clearInputs()
 			@$popup.fadeIn(100)
 			@$warning.removeClass('visible')
 			return
@@ -85,7 +83,11 @@ define ['jquery', 'utils'], ($, utils) ->
 			$('body').removeClass('body-block');
 			@$popup.fadeOut(100)
 			@calendar.setCurTd(null)
-
 			return
+
+		clearInputs :() ->
+			@$popup.find('input, textarea').val('')
+			return
+
 	return Popup
 
