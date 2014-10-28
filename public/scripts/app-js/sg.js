@@ -51,13 +51,15 @@
         })(this));
         this.$searchSug.on('click', 'li', (function(_this) {
           return function(e) {
-            var dateMas;
-            _this.calendar.popup.hidePopup();
-            dateMas = $(e.currentTarget).attr('data-date').split('-');
-            _this.calendar.curDate.setMonth(dateMas[1]);
-            _this.calendar.curDate.setYear(dateMas[2]);
+            var dateArray;
+            dateArray = $(e.currentTarget).attr('data-date').split('-');
+            _this.calendar.curDate.setMonth(dateArray[1]);
+            _this.calendar.curDate.setYear(dateArray[2]);
             _this.calendar.fullContainer();
-            _this.hideSG();
+            _this.calendar.hideElements({
+              hidePopup: true,
+              hideSg: true
+            });
             _this.$searchQ.val('');
           };
         })(this));

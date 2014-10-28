@@ -33,12 +33,11 @@ define ['jquery','underscore', 'utils', 'text!../templates/sg.html'], ($, _, uti
 				return
 			
 			@$searchSug.on 'click', 'li', (e)=>
-				@calendar.popup.hidePopup()
-				dateMas=$(e.currentTarget).attr('data-date').split('-')
-				@calendar.curDate.setMonth(dateMas[1])
-				@calendar.curDate.setYear(dateMas[2])
+				dateArray=$(e.currentTarget).attr('data-date').split('-')
+				@calendar.curDate.setMonth(dateArray[1])
+				@calendar.curDate.setYear(dateArray[2])
 				@calendar.fullContainer()
-				@hideSG()
+				@calendar.hideElements({hidePopup:yes, hideSg:yes})
 				@$searchQ.val('')
 				return
 			return
