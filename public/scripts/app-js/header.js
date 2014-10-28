@@ -18,13 +18,13 @@
       Header.prototype.bindHandlers = function() {
         this.$prevBtn.on('click', (function(_this) {
           return function() {
-            _this.prevMonth();
+            _this.calendar.curDate.setMonth(_this.calendar.curDate.getMonth() - 1);
             _this.goToMonth();
           };
         })(this));
         this.$nextBtn.on('click', (function(_this) {
           return function() {
-            _this.nextMonth();
+            _this.calendar.curDate.setMonth(_this.calendar.curDate.getMonth() + 1);
             _this.goToMonth();
           };
         })(this));
@@ -47,14 +47,6 @@
 
       Header.prototype.setDateText = function(month, year) {
         this.$monthElem.text("" + utils.months[month] + " " + year);
-      };
-
-      Header.prototype.prevMonth = function() {
-        this.calendar.curDate.setMonth(this.calendar.curDate.getMonth() - 1);
-      };
-
-      Header.prototype.nextMonth = function() {
-        this.calendar.curDate.setMonth(this.calendar.curDate.getMonth() + 1);
       };
 
       return Header;
