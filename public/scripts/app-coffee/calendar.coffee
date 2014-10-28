@@ -48,11 +48,7 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			monthDataArray = []
 			for dataKey of data		
 				dateArray = dataKey.split('-').map((el)->parseInt(el))
-				itemDate = {
-					day : dateArray[0]
-					month : dateArray[1]
-					year : dateArray[2]
-				}
+				itemDate = { day : dateArray[0], month : dateArray[1], year : dateArray[2] }
 				dataItem = data[dataKey]
 				if dataItem and @curDate.getMonth()==itemDate.month and @curDate.getFullYear()==itemDate.year
 					monthDataArray[itemDate.day] = dataItem
@@ -73,12 +69,8 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			description = item.description
 			date = item.date
 
-			@$curTd
-				.attr('data-descr', description)
-				.attr('data-name', name)
-				.addClass('full')
-				.find('.name').text(name)
-				.siblings('.descr').text(description)
+			@$curTd.attr('data-descr', description).attr('data-name', name).addClass('full')
+				.find('.name').text(name).siblings('.descr').text(description)
 			savedData = {
 				day : date.getDate()
 				curDate : date
@@ -91,10 +83,7 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			return 
 
 		deleteItem:(item) ->
-			@$curTd
-				.removeAttr('data-descr')
-				.removeAttr('data-name')
-				.removeClass('full')
+			@$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('full')
 				.find('p').text('')
 			savedData = {
 				day : item.date.getDate()

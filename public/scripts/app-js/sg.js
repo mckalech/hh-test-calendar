@@ -1,5 +1,5 @@
 (function() {
-  define(['jquery', 'utils'], function($, utils) {
+  define(['jquery', 'underscore', 'utils', 'text!../templates/sg.html'], function($, _, utils, sgTemplate) {
     var SG;
     SG = (function() {
       function SG(calendar) {
@@ -64,9 +64,15 @@
       };
 
       SG.prototype.appendSgItem = function(text, query, date) {
-        var replStr;
-        replStr = text.replaceAll(query, "<b>" + query + "</b>");
-        this.$searchSug.append("<li data-date='" + date + "'><p>" + replStr + "</p><span>" + (date.split('-')[0]) + " " + utils.monthSklon[date.split('-')[1]] + "</span></li");
+        var sgHtml, templateData;
+        templateData = {
+          replStr: text.replaceAll(query, "<b>" + query + "</b>"),
+          date: date,
+          day: date.split('-')[0],
+          month: utils.monthSklon[date.split('-')[1]]
+        };
+        sgHtml = _.template(sgTemplate)(templateData);
+        this.$searchSug.append(sgHtml);
       };
 
       SG.prototype.hideSG = function() {

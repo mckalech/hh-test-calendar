@@ -1,4 +1,4 @@
-define ['jquery','utils'], ($, utils) ->
+define ['jquery','underscore', 'utils', 'text!../templates/sg.html'], ($, _, utils, sgTemplate) ->
 	class SG 
 		constructor: (calendar) ->
 			@calendar = calendar
@@ -43,8 +43,14 @@ define ['jquery','utils'], ($, utils) ->
 				return
 			return
 		appendSgItem : (text, query, date) ->
-			replStr = text.replaceAll(query,"<b>#{query}</b>")
-			@$searchSug.append("<li data-date='#{date}'><p>#{replStr}</p><span>#{date.split('-')[0]} #{utils.monthSklon[date.split('-')[1]]}</span></li")
+			templateData = {
+				replStr : text.replaceAll(query,"<b>#{query}</b>")
+				date : date
+				day : date.split('-')[0]
+				month : utils.monthSklon[date.split('-')[1]]
+			}
+			sgHtml = _.template(sgTemplate)(templateData)
+			@$searchSug.append(sgHtml)
 			return
 		hideSG : ()->
 			@$searchSug.html('').hide()
