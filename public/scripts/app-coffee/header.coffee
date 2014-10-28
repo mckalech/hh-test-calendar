@@ -5,32 +5,34 @@ define ['jquery', 'utils'], ($, utils) ->
 			@initHtml()
 			@bindHandlers()
 		initHtml : () ->
-			@$prevBtn 	= 	$('.prev')
-			@$nextBtn 	= 	$('.next')
-			@$todayBtn 	= 	$('.today-btn')
-			@$monthElem = 	$('.month')
+			@$prevBtn 	= 	$('.b-header__nav_prev')
+			@$nextBtn 	= 	$('.b-header__nav_next')
+			@$todayBtn 	= 	$('.b-header__today-btn')
+			@$monthElem = 	$('.b-header__month')
 		bindHandlers : () ->
 			@$prevBtn.on 'click', () =>
 				@calendar.prevMonth()
-				@calendar.hideElements({hidePopup:yes, hideSg:yes})
-				@calendar.fullContainer()
+				@goToMonth()
 				return
 
 			@$nextBtn.on 'click', () =>
 				@calendar.nextMonth()
-				@calendar.hideElements({hidePopup:yes, hideSg:yes})
-				@calendar.fullContainer()
+				@goToMonth()
 				return
 
 			@$todayBtn.on 'click', () =>
 				@calendar.curDate.setMonth(@calendar.today.getMonth())
 				@calendar.curDate.setYear(@calendar.today.getFullYear())
-				@calendar.hideElements({hidePopup:yes, hideSg:yes})
-				@calendar.fullContainer()
+				@goToMonth()
 				return
+			return
+		goToMonth : () ->
+			@calendar.hideElements({hidePopup:yes, hideSg:yes})
+			@calendar.fullContainer()
 			return
 		setDateText : (month, year)->
 			@$monthElem.text("#{utils.months[month]} #{year}")
+			return
 
 
 
