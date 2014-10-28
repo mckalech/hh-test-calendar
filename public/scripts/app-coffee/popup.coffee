@@ -17,7 +17,18 @@ define ['jquery', 'utils'], ($, utils) ->
 			@$popup.find('.close').on 'click', () =>
 				@hidePopup()
 				return
-			
+
+			@$popup.on 'click',(e)=>
+				if $(e.target).hasClass('cal__popup')
+		            @hidePopup()
+		        return
+
+			$(document).keydown (e) =>
+			    if e.keyCode is 27 
+			        @hidePopup()
+			        return false
+			    return
+			    
 			@$popup.find('input, textarea').on 'blur', (e)=>			
 				text = $(e.currentTarget).val()
 				$(e.currentTarget).siblings('span').text(text) 
@@ -58,7 +69,7 @@ define ['jquery', 'utils'], ($, utils) ->
 			description = opt.description
 			name = opt.name
 
-
+			$('body').addClass('body-block');
 			@$date.text("#{@date.getDate()} #{utils.monthSklon[@date.getMonth()]}")	
 			if full			
 				@$description.removeClass('empty').find('span').text(description)
@@ -66,15 +77,15 @@ define ['jquery', 'utils'], ($, utils) ->
 			else
 				@$description.add(@$name).addClass('empty').find('span').text('')
 				@$popup.find('input, textarea').val('')
-			@$popup.css({ top: newY-30, left: newX+20}).fadeIn(100)
+			@$popup.fadeIn(100)
 			@$warning.removeClass('visible')
 			return
 		
 		hidePopup:() ->
+			$('body').removeClass('body-block');
 			@$popup.fadeOut(100)
 			@calendar.setCurTd(null)
 
 			return
 	return Popup
-
 

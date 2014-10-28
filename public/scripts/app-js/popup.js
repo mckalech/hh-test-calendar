@@ -26,6 +26,21 @@
             _this.hidePopup();
           };
         })(this));
+        this.$popup.on('click', (function(_this) {
+          return function(e) {
+            if ($(e.target).hasClass('cal__popup')) {
+              _this.hidePopup();
+            }
+          };
+        })(this));
+        $(document).keydown((function(_this) {
+          return function(e) {
+            if (e.keyCode === 27) {
+              _this.hidePopup();
+              return false;
+            }
+          };
+        })(this));
         this.$popup.find('input, textarea').on('blur', (function(_this) {
           return function(e) {
             var text;
@@ -80,6 +95,7 @@
         full = opt.full;
         description = opt.description;
         name = opt.name;
+        $('body').addClass('body-block');
         this.$date.text("" + (this.date.getDate()) + " " + utils.monthSklon[this.date.getMonth()]);
         if (full) {
           this.$description.removeClass('empty').find('span').text(description);
@@ -88,14 +104,12 @@
           this.$description.add(this.$name).addClass('empty').find('span').text('');
           this.$popup.find('input, textarea').val('');
         }
-        this.$popup.css({
-          top: newY - 30,
-          left: newX + 20
-        }).fadeIn(100);
+        this.$popup.fadeIn(100);
         this.$warning.removeClass('visible');
       };
 
       Popup.prototype.hidePopup = function() {
+        $('body').removeClass('body-block');
         this.$popup.fadeOut(100);
         this.calendar.setCurTd(null);
       };
