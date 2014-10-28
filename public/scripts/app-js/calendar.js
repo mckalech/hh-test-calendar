@@ -1,5 +1,5 @@
 (function() {
-  define(['jquery', 'underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!../templates/table.html'], function($, _, utils, Header, Data, SG, Popup, tableTemplate) {
+  define(['jquery', 'underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!../templates/table.html'], function($, _, utils, HeaderView, Data, SG, Popup, tableTemplate) {
     var Calendar;
     Calendar = (function() {
       Calendar.prototype.today = new Date();
@@ -11,7 +11,9 @@
       function Calendar() {
         this.initHtml();
         this.data = new Data(this);
-        this.header = new Header(this);
+        this.header = new HeaderView({
+          calendar: this
+        });
         this.sg = new SG(this);
         this.popup = new Popup(this);
         this.fullContainer();

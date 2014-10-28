@@ -1,58 +1,52 @@
 (function() {
-  define(['jquery', 'utils'], function($, utils) {
-    var Header;
-    Header = (function() {
-      function Header(calendar) {
-        this.calendar = calendar;
+  define(['jquery', 'underscore', 'backbone', 'utils'], function($, _, Backbone, utils) {
+    var HeaderView;
+    HeaderView = Backbone.View.extend({
+      el: $('.b-header'),
+      initialize: function(options) {
+        this.calendar = options.calendar;
+        this.render();
+      },
+      render: function() {
         this.initHtml();
-        this.bindHandlers();
-      }
-
-      Header.prototype.initHtml = function() {
-        this.$prevBtn = $('.b-header__nav_prev');
-        this.$nextBtn = $('.b-header__nav_next');
-        this.$todayBtn = $('.b-header__today-btn');
-        return this.$monthElem = $('.b-header__month');
-      };
-
-      Header.prototype.bindHandlers = function() {
-        this.$prevBtn.on('click', (function(_this) {
-          return function() {
-            _this.calendar.curDate.setMonth(_this.calendar.curDate.getMonth() - 1);
-            _this.goToMonth();
-          };
-        })(this));
-        this.$nextBtn.on('click', (function(_this) {
-          return function() {
-            _this.calendar.curDate.setMonth(_this.calendar.curDate.getMonth() + 1);
-            _this.goToMonth();
-          };
-        })(this));
-        this.$todayBtn.on('click', (function(_this) {
-          return function() {
-            _this.calendar.curDate.setMonth(_this.calendar.today.getMonth());
-            _this.calendar.curDate.setYear(_this.calendar.today.getFullYear());
-            _this.goToMonth();
-          };
-        })(this));
-      };
-
-      Header.prototype.goToMonth = function() {
+      },
+      events: {
+        'click .b-header__nav_prev': 'prevMonth',
+        'click .b-header__nav_next': 'nextMonth',
+        'click .b-header__today-btn': 'todayMonth'
+      },
+      initHtml: function() {
+        this.wrapper = this.$('.b-wrap');
+        this.$prevBtn = $('<span />').addClass('b-header__nav b-header__nav_prev').appendTo(this.wrapper);
+        this.$monthElem = $('<span />').addClass('b-header__month').appendTo(this.wrapper);
+        this.$nextBtn = $('<span />').addClass('b-header__nav b-header__nav_next').appendTo(this.wrapper);
+        this.$todayBtn = $('<span />').addClass('b-header__today-btn').text('Сегодня').appendTo(this.wrapper);
+      },
+      prevMonth: function() {
+        this.calendar.curDate.setMonth(this.calendar.curDate.getMonth() - 1);
+        this.goToMonth();
+      },
+      nextMonth: function() {
+        this.calendar.curDate.setMonth(this.calendar.curDate.getMonth() + 1);
+        this.goToMonth();
+      },
+      todayMonth: function() {
+        this.calendar.curDate.setMonth(this.calendar.today.getMonth());
+        this.calendar.curDate.setYear(this.calendar.today.getFullYear());
+        this.goToMonth();
+      },
+      goToMonth: function() {
         this.calendar.hideElements({
           hidePopup: true,
           hideSg: true
         });
         this.calendar.fullContainer();
-      };
-
-      Header.prototype.setDateText = function(month, year) {
+      },
+      setDateText: function(month, year) {
         this.$monthElem.text("" + utils.months[month] + " " + year);
-      };
-
-      return Header;
-
-    })();
-    return Header;
+      }
+    });
+    return HeaderView;
   });
 
 }).call(this);
