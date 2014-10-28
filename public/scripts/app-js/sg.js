@@ -9,8 +9,8 @@
       }
 
       SG.prototype.initHtml = function() {
-        this.$searchQ = $('.search');
-        return this.$searchSug = $('.sug');
+        this.$searchQ = $('.b-search__input');
+        return this.$searchSug = $('.b-search__sg');
       };
 
       SG.prototype.bindHandlers = function() {

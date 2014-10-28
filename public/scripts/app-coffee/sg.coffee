@@ -5,8 +5,8 @@ define ['jquery','underscore', 'utils', 'text!../templates/sg.html'], ($, _, uti
 			@initHtml()
 			@bindHandlers()
 		initHtml : () ->
-			@$searchQ 	= 	$('.search')
-			@$searchSug	= 	$('.sug')
+			@$searchQ 	= 	$('.b-search__input')
+			@$searchSug	= 	$('.b-search__sg')
 		bindHandlers : () ->
 			@$searchQ.on 'focus', (e) =>
 				@calendar.hideElements({hidePopup:yes})
