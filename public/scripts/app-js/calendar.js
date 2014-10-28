@@ -45,28 +45,12 @@
       };
 
       Calendar.prototype.fullContainer = function() {
-        var $table, data, dataItem, dataKey, dateArray, itemDate, monthDataArray, templateData;
-        data = this.data.getData();
-        monthDataArray = [];
-        for (dataKey in data) {
-          dateArray = dataKey.split('-').map(function(el) {
-            return parseInt(el);
-          });
-          itemDate = {
-            day: dateArray[0],
-            month: dateArray[1],
-            year: dateArray[2]
-          };
-          dataItem = data[dataKey];
-          if (dataItem && this.curDate.getMonth() === itemDate.month && this.curDate.getFullYear() === itemDate.year) {
-            monthDataArray[itemDate.day] = dataItem;
-          }
-        }
+        var $table, templateData;
         templateData = {
           weeksInMonth: this.curDate.weeksInMonth(),
           firstDayInMonth: this.curDate.firstDayInMonth(),
           daysInMonth: this.curDate.daysInMonth(),
-          monthDataArray: monthDataArray,
+          monthDataArray: this.data.getMonthData(this.curDate.getMonth(), this.curDate.getFullYear()),
           utils: utils
         };
         $table = _.template(tableTemplate)(templateData);

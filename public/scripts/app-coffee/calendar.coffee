@@ -34,19 +34,11 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			return
 			
 		fullContainer : () ->
-			data = @data.getData()
-			monthDataArray = []
-			for dataKey of data		
-				dateArray = dataKey.split('-').map((el)->parseInt(el))
-				itemDate = { day : dateArray[0], month : dateArray[1], year : dateArray[2] }
-				dataItem = data[dataKey]
-				if dataItem and @curDate.getMonth()==itemDate.month and @curDate.getFullYear()==itemDate.year
-					monthDataArray[itemDate.day] = dataItem
 			templateData = {
 				weeksInMonth : @curDate.weeksInMonth()
 				firstDayInMonth : @curDate.firstDayInMonth()
 				daysInMonth : @curDate.daysInMonth()
-				monthDataArray : monthDataArray
+				monthDataArray : @data.getMonthData(@curDate.getMonth(),@curDate.getFullYear())
 				utils : utils
 			}
 			$table = _.template(tableTemplate)(templateData)
