@@ -13,18 +13,18 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			@fullContainer()
 			@bindHandlers()
 		initHtml : () ->
-			@$elem = $('.container')
+			@$elem = $('.b-table')
 			return
 
 		bindHandlers : () ->	
-			@$elem.on 'click', '.item', (e)=> 
+			@$elem.on 'click', '.b-cell', (e)=> 
 				$currentCell = $(e.currentTarget)
 				date = new Date(@curDate)
 				date.setDate($currentCell.attr('data-date'))
 				@hideElements({hideSg:yes})
 				options = {
 					date : date
-					full : $currentCell.hasClass('full')	
+					full : $currentCell.hasClass('b-cell_full')	
 					description : $currentCell.attr('data-descr')
 					name : $currentCell.attr('data-name')
 				}
@@ -67,7 +67,7 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			description = item.description
 			date = item.date
 
-			@$curTd.attr('data-descr', description).attr('data-name', name).addClass('full')
+			@$curTd.attr('data-descr', description).attr('data-name', name).addClass('b-cell_full')
 				.find('.name').text(name).siblings('.descr').text(description)
 			savedData = {
 				day : date.getDate()
@@ -81,7 +81,7 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			return 
 
 		deleteItem:(item) ->
-			@$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('full')
+			@$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('b-cell_full')
 				.find('p').text('')
 			savedData = {
 				day : item.date.getDate()
@@ -94,7 +94,7 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 
 		setCurTd : ($tdElem) ->
 			@$curTd = $tdElem;
-			@$elem.find('.item').removeClass('active');
+			@$elem.find('.b-cell').removeClass('active');
 			if @$curTd
 				@$curTd.addClass('active');
 			return

@@ -12,17 +12,18 @@ body
 	float: none
 	clear: both
 
-.container
-	padding-bottom: 40px
 .b-wrap
 	width: 765px
 	margin: auto
 
 /*main table */
-#main-table
-	margin-top: 20px
-	border-spacing: 0
-	border: 1px solid #e2e2e2
+.b-table
+	padding-bottom: 40px
+
+	table
+		margin-top: 20px
+		border-spacing: 0
+		border: 1px solid #e2e2e2
 
 	td	
 		height: 95px
@@ -35,7 +36,7 @@ body
 		color: #666666
 	
 
-		&.item
+		&.b-cell
 			&:hover
 				border-color: #8abfe9
 				cursor: pointer
@@ -52,7 +53,7 @@ body
 				border-color: #8abfe9
 			
 		
-		&.full
+		&.b-cell_full
 			background: #c2e4fe
 		
 		.date

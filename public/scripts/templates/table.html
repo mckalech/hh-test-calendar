@@ -1,4 +1,4 @@
-<table id="main-table">
+<table>
 	<% var i,j,dayText,d=1 %>
 	<% for(i=0;i<weeksInMonth;i++) { %>
 		<tr>
@@ -11,13 +11,13 @@
 				<% if (d>daysInMonth) {%><td></td><% continue } %>
 				<% dayText = i===0 ? utils.days[j]+", "+d : d %>
 				<% if (monthDataArray[d]) { %> 
-					<td class="item full" data-date="<%=d%>" data-name="<%=monthDataArray[d].name %>" data-descr="<%=monthDataArray[d].descr %>">
+					<td class="b-cell b-cell_full" data-date="<%=d%>" data-name="<%=monthDataArray[d].name %>" data-descr="<%=monthDataArray[d].descr %>">
 						<div class='date'><%= dayText %></div>
 						<p class='name'><%= monthDataArray[d].name %></p>
 						<p class='descr'><%= monthDataArray[d].descr %></p>
 					</td>
 				<% }else {%>
-					<td class="item" data-date="<%=d%>">
+					<td class="b-cell" data-date="<%=d%>">
 						<div class='date'><%= dayText %></div>
 						<p class='name'></p>
 						<p class='descr'></p>

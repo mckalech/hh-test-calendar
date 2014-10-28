@@ -19,11 +19,11 @@
       }
 
       Calendar.prototype.initHtml = function() {
-        this.$elem = $('.container');
+        this.$elem = $('.b-table');
       };
 
       Calendar.prototype.bindHandlers = function() {
-        this.$elem.on('click', '.item', (function(_this) {
+        this.$elem.on('click', '.b-cell', (function(_this) {
           return function(e) {
             var $currentCell, date, options;
             $currentCell = $(e.currentTarget);
@@ -34,7 +34,7 @@
             });
             options = {
               date: date,
-              full: $currentCell.hasClass('full'),
+              full: $currentCell.hasClass('b-cell_full'),
               description: $currentCell.attr('data-descr'),
               name: $currentCell.attr('data-name')
             };
@@ -87,7 +87,7 @@
         name = item.name;
         description = item.description;
         date = item.date;
-        this.$curTd.attr('data-descr', description).attr('data-name', name).addClass('full').find('.name').text(name).siblings('.descr').text(description);
+        this.$curTd.attr('data-descr', description).attr('data-name', name).addClass('b-cell_full').find('.name').text(name).siblings('.descr').text(description);
         savedData = {
           day: date.getDate(),
           curDate: date,
@@ -103,7 +103,7 @@
 
       Calendar.prototype.deleteItem = function(item) {
         var savedData;
-        this.$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('full').find('p').text('');
+        this.$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('b-cell_full').find('p').text('');
         savedData = {
           day: item.date.getDate(),
           curDate: item.date
@@ -117,7 +117,7 @@
 
       Calendar.prototype.setCurTd = function($tdElem) {
         this.$curTd = $tdElem;
-        this.$elem.find('.item').removeClass('active');
+        this.$elem.find('.b-cell').removeClass('active');
         if (this.$curTd) {
           this.$curTd.addClass('active');
         }
