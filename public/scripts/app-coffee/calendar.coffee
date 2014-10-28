@@ -70,8 +70,7 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			@$curTd.attr('data-descr', description).attr('data-name', name).addClass('b-cell_full')
 				.find('.name').text(name).siblings('.descr').text(description)
 			savedData = {
-				day : date.getDate()
-				curDate : date
+				date : date
 				descr : description
 				name : name
 			}
@@ -84,8 +83,7 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			@$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('b-cell_full')
 				.find('p').text('')
 			savedData = {
-				day : item.date.getDate()
-				curDate : item.date
+				date : item.date
 			}
 			@data.setData(savedData, no)
 			@popup.clearInputs()

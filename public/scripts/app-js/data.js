@@ -17,7 +17,7 @@
 
       Data.prototype.setData = function(options, save) {
         var key;
-        key = "" + options.day + "-" + (options.curDate.getMonth()) + "-" + (options.curDate.getFullYear());
+        key = "" + (options.date.getDate()) + "-" + (options.date.getMonth()) + "-" + (options.date.getFullYear());
         if (save) {
           this.info[key] = {};
           this.info[key].descr = options.descr;
