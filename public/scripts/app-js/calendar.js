@@ -44,14 +44,6 @@
         })(this));
       };
 
-      Calendar.prototype.prevMonth = function() {
-        this.curDate.setMonth(this.curDate.getMonth() - 1);
-      };
-
-      Calendar.prototype.nextMonth = function() {
-        this.curDate.setMonth(this.curDate.getMonth() + 1);
-      };
-
       Calendar.prototype.fullContainer = function() {
         var $table, data, dataItem, dataKey, dateArray, itemDate, monthDataArray, templateData;
         data = this.data.getData();

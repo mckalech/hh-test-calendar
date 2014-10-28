@@ -32,14 +32,6 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 				@setCurTd($currentCell)
 				return
 			return
-
-		prevMonth : () ->
-			@curDate.setMonth(@curDate.getMonth()-1)
-			return
-
-		nextMonth : () ->
-			@curDate.setMonth(@curDate.getMonth()+1)
-			return
 			
 		fullContainer : () ->
 			data = @data.getData()

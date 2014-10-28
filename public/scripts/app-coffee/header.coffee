@@ -11,12 +11,12 @@ define ['jquery', 'utils'], ($, utils) ->
 			@$monthElem = 	$('.b-header__month')
 		bindHandlers : () ->
 			@$prevBtn.on 'click', () =>
-				@calendar.prevMonth()
+				@prevMonth()
 				@goToMonth()
 				return
 
 			@$nextBtn.on 'click', () =>
-				@calendar.nextMonth()
+				@nextMonth()
 				@goToMonth()
 				return
 
@@ -32,6 +32,12 @@ define ['jquery', 'utils'], ($, utils) ->
 			return
 		setDateText : (month, year)->
 			@$monthElem.text("#{utils.months[month]} #{year}")
+			return
+		prevMonth : () ->
+			@calendar.curDate.setMonth(@calendar.curDate.getMonth()-1)
+			return
+		nextMonth : () ->
+			@calendar.curDate.setMonth(@calendar.curDate.getMonth()+1)
 			return
 
 
