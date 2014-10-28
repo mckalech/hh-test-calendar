@@ -25,20 +25,20 @@
       Calendar.prototype.bindHandlers = function() {
         this.$elem.on('click', '.b-cell', (function(_this) {
           return function(e) {
-            var $currentCell, date, options;
+            var $currentCell, date, itemData;
             $currentCell = $(e.currentTarget);
             date = new Date(_this.curDate);
             date.setDate($currentCell.attr('data-date'));
             _this.hideElements({
               hideSg: true
             });
-            options = {
+            itemData = {
               date: date,
               full: $currentCell.hasClass('b-cell_full'),
               description: $currentCell.attr('data-descr'),
               name: $currentCell.attr('data-name')
             };
-            _this.popup.showPopup(options);
+            _this.popup.showPopup(itemData);
             _this.setCurTd($currentCell);
           };
         })(this));

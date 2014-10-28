@@ -22,13 +22,13 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 				date = new Date(@curDate)
 				date.setDate($currentCell.attr('data-date'))
 				@hideElements({hideSg:yes})
-				options = {
+				itemData = {
 					date : date
 					full : $currentCell.hasClass('b-cell_full')	
 					description : $currentCell.attr('data-descr')
 					name : $currentCell.attr('data-name')
 				}
-				@popup.showPopup(options)
+				@popup.showPopup(itemData)
 				@setCurTd($currentCell)
 				return
 			return
@@ -104,5 +104,3 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			return
 			
 	return Calendar
-
-

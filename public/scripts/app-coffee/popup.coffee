@@ -61,11 +61,11 @@ define ['jquery', 'utils'], ($, utils) ->
 
 			return
 			
-		showPopup: (opt) ->
-			@date = opt.date
-			full = opt.full
-			description = opt.description
-			name = opt.name
+		showPopup: (itemData) ->
+			@date = itemData.date
+			full = itemData.full
+			description = itemData.description
+			name = itemData.name
 
 			$('body').addClass('body-block');
 			@$date.text("#{@date.getDate()} #{utils.monthSklon[@date.getMonth()]}")	

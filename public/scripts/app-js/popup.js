@@ -87,12 +87,12 @@
         })(this));
       };
 
-      Popup.prototype.showPopup = function(opt) {
+      Popup.prototype.showPopup = function(itemData) {
         var description, full, name;
-        this.date = opt.date;
-        full = opt.full;
-        description = opt.description;
-        name = opt.name;
+        this.date = itemData.date;
+        full = itemData.full;
+        description = itemData.description;
+        name = itemData.name;
         $('body').addClass('body-block');
         this.$date.text("" + (this.date.getDate()) + " " + utils.monthSklon[this.date.getMonth()]);
         if (full) {
