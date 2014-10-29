@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "express": "latest",
+    "bower": "latest",
     "grunt": "^0.4.5",
     "grunt-contrib-watch": "latest",
     "grunt-contrib-compass": "latest",
