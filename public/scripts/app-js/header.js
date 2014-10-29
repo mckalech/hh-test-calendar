@@ -1,5 +1,5 @@
 (function() {
-  define(['jquery', 'underscore', 'backbone', 'utils'], function($, _, Backbone, utils) {
+  define(['jquery', 'underscore', 'backbone', 'utils', 'text!../templates/header.html'], function($, _, Backbone, utils, headerTemplate) {
     var HeaderView;
     HeaderView = Backbone.View.extend({
       el: $('.b-header'),
@@ -8,19 +8,15 @@
         this.render();
       },
       render: function() {
-        this.initHtml();
+        var headerHtml;
+        headerHtml = _.template(headerTemplate)();
+        this.$el.html(headerHtml);
+        this.$monthElem = $('.b-header__month');
       },
       events: {
         'click .b-header__nav_prev': 'prevMonth',
         'click .b-header__nav_next': 'nextMonth',
         'click .b-header__today-btn': 'todayMonth'
-      },
-      initHtml: function() {
-        this.wrapper = this.$('.b-wrap');
-        this.$prevBtn = $('<span />').addClass('b-header__nav b-header__nav_prev').appendTo(this.wrapper);
-        this.$monthElem = $('<span />').addClass('b-header__month').appendTo(this.wrapper);
-        this.$nextBtn = $('<span />').addClass('b-header__nav b-header__nav_next').appendTo(this.wrapper);
-        this.$todayBtn = $('<span />').addClass('b-header__today-btn').text('Сегодня').appendTo(this.wrapper);
       },
       prevMonth: function() {
         this.calendar.curDate.setMonth(this.calendar.curDate.getMonth() - 1);

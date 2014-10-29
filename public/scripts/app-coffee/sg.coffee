@@ -15,7 +15,6 @@ define ['jquery','underscore', 'backbone', 'utils', 'text!../templates/search.ht
 			'keyup .b-search__input' : 'keyPress'
 			'click .b-search__sg li' : 'goToSuggestedCell'
 		}
-
 		keyPress: (e) ->
 			query = $(e.currentTarget).val()
 			data = @calendar.data.getData()
@@ -35,7 +34,6 @@ define ['jquery','underscore', 'backbone', 'utils', 'text!../templates/search.ht
 			else
 				@hideSG()
 			return
-			
 		goToSuggestedCell : (e) ->
 			dateArray=$(e.currentTarget).attr('data-date').split('-')
 			@calendar.curDate.setMonth(dateArray[1])
