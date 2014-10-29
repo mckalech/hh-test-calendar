@@ -39,6 +39,8 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 				firstDayInMonth : @curDate.firstDayInMonth()
 				daysInMonth : @curDate.daysInMonth()
 				monthDataArray : @data.getMonthData(@curDate.getMonth(),@curDate.getFullYear())
+				todayDay : @today.getDate()
+				isTodayMonth : @curDate.getMonth() is @today.getMonth() and @curDate.getYear() is @today.getYear()
 				utils : utils
 			}
 			$table = _.template(tableTemplate)(templateData)

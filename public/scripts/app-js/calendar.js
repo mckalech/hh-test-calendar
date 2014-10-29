@@ -57,6 +57,8 @@
           firstDayInMonth: this.curDate.firstDayInMonth(),
           daysInMonth: this.curDate.daysInMonth(),
           monthDataArray: this.data.getMonthData(this.curDate.getMonth(), this.curDate.getFullYear()),
+          todayDay: this.today.getDate(),
+          isTodayMonth: this.curDate.getMonth() === this.today.getMonth() && this.curDate.getYear() === this.today.getYear(),
           utils: utils
         };
         $table = _.template(tableTemplate)(templateData);
