@@ -1,38 +1,73 @@
 (function() {
-  define(['jquery', 'utils'], function($, utils) {
-    var Popup;
-    Popup = (function() {
-      Popup.prototype.date = null;
-
-      function Popup(calendar) {
-        this.calendar = calendar;
-        this.initHtml();
+  define(['jquery', 'underscore', 'backbone', 'utils'], function($, _, Backbone, utils) {
+    var PopupView;
+    PopupView = Backbone.View.extend({
+      el: $('.b-popup'),
+      date: null,
+      initialize: function(options) {
+        this.calendar = options.calendar;
+        this.render();
         this.bindHandlers();
-      }
-
-      Popup.prototype.initHtml = function() {
-        this.$saveBtn = $('.b-popup__btn_save');
-        this.$delBtn = $('.b-popup__btn_delete');
-        this.$warning = $('.b-popup__warning');
-        this.$popup = $('.b-popup');
-        this.$description = this.$popup.find('.b-popup__edit_description');
-        this.$name = this.$popup.find('.b-popup__edit_name');
-        return this.$date = this.$popup.find('.b-popup__date span');
-      };
-
-      Popup.prototype.bindHandlers = function() {
-        this.$popup.find('.b-popup__close').on('click', (function(_this) {
-          return function() {
-            _this.hidePopup();
-          };
-        })(this));
-        this.$popup.on('click', (function(_this) {
-          return function(e) {
-            if ($(e.target).hasClass('b-popup')) {
-              _this.hidePopup();
-            }
-          };
-        })(this));
+      },
+      render: function() {
+        this.$warning = this.$('.b-popup__warning');
+        this.$description = this.$('.b-popup__edit_description');
+        this.$name = this.$('.b-popup__edit_name');
+        this.$date = this.$('.b-popup__date span');
+      },
+      events: {
+        'click': 'overlayClick',
+        'click .b-popup__close': 'closeClick',
+        'blur input, textarea': 'inputsBlur',
+        'click .b-popup__edit span': 'inputSpansClick',
+        'click .b-popup__btn_save': 'saveClick',
+        'click .b-popup__btn_delete': 'deleteClick'
+      },
+      closeClick: function() {
+        this.hidePopup();
+      },
+      overlayClick: function(e) {
+        if ($(e.target).hasClass('b-popup')) {
+          this.hidePopup();
+        }
+      },
+      inputsBlur: function(e) {
+        var text;
+        text = $(e.currentTarget).val();
+        $(e.currentTarget).siblings('span').text(text);
+        if (text) {
+          $(e.currentTarget).parent().removeClass('b-popup__edit_empty');
+        }
+      },
+      inputSpansClick: function(e) {
+        var text;
+        text = $(e.currentTarget).text();
+        $(e.currentTarget).parent().addClass('b-popup__edit_empty').find('input, textarea').val(text).focus();
+      },
+      saveClick: function() {
+        var description, name;
+        description = this.$description.find('span').text();
+        name = this.$name.find('span').text();
+        if (description && name) {
+          this.calendar.saveItem({
+            name: name,
+            description: description,
+            date: this.date
+          });
+        } else if (!(description || name)) {
+          this.calendar.deleteItem({
+            date: this.date
+          });
+        } else {
+          this.$warning.addClass('visible');
+        }
+      },
+      deleteClick: function() {
+        this.calendar.deleteItem({
+          date: this.date
+        });
+      },
+      bindHandlers: function() {
         $(document).keydown((function(_this) {
           return function(e) {
             if (e.keyCode === 27) {
@@ -41,53 +76,8 @@
             }
           };
         })(this));
-        this.$popup.find('input, textarea').on('blur', (function(_this) {
-          return function(e) {
-            var text;
-            text = $(e.currentTarget).val();
-            $(e.currentTarget).siblings('span').text(text);
-            if (text) {
-              $(e.currentTarget).parent().removeClass('b-popup__edit_empty');
-            }
-          };
-        })(this));
-        this.$popup.on('click', '.b-popup__edit span', (function(_this) {
-          return function(e) {
-            var text;
-            text = $(e.currentTarget).text();
-            $(e.currentTarget).parent().addClass('b-popup__edit_empty').find('input, textarea').val(text).focus();
-          };
-        })(this));
-        this.$saveBtn.on('click', (function(_this) {
-          return function() {
-            var description, name;
-            description = _this.$description.find('span').text();
-            name = _this.$name.find('span').text();
-            if (description && name) {
-              _this.calendar.saveItem({
-                name: name,
-                description: description,
-                date: _this.date
-              });
-            } else if (!(description || name)) {
-              _this.calendar.deleteItem({
-                date: _this.date
-              });
-            } else {
-              _this.$warning.addClass('visible');
-            }
-          };
-        })(this));
-        this.$delBtn.on('click', (function(_this) {
-          return function() {
-            _this.calendar.deleteItem({
-              date: _this.date
-            });
-          };
-        })(this));
-      };
-
-      Popup.prototype.showPopup = function(itemData) {
+      },
+      showPopup: function(itemData) {
         var description, full, name;
         this.date = itemData.date;
         full = itemData.full;
@@ -102,24 +92,19 @@
           this.$description.add(this.$name).addClass('b-popup__edit_empty').find('span').text('');
           this.clearInputs();
         }
-        this.$popup.fadeIn(100);
+        this.$el.fadeIn(100);
         this.$warning.removeClass('visible');
-      };
-
-      Popup.prototype.hidePopup = function() {
+      },
+      hidePopup: function() {
         $('body').removeClass('body-block');
-        this.$popup.fadeOut(100);
+        this.$el.fadeOut(100);
         this.calendar.setCurTd(null);
-      };
-
-      Popup.prototype.clearInputs = function() {
-        this.$popup.find('input, textarea').val('');
-      };
-
-      return Popup;
-
-    })();
-    return Popup;
+      },
+      clearInputs: function() {
+        this.$el.find('input, textarea').val('');
+      }
+    });
+    return PopupView;
   });
 
 }).call(this);

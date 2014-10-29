@@ -1,4 +1,4 @@
-define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!../templates/table.html'], ($, _, utils, HeaderView, Data, SGView, Popup, tableTemplate) ->
+define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!../templates/table.html'], ($, _, utils, HeaderView, Data, SGView, PopupView, tableTemplate) ->
 	class Calendar 
 		today		:	new Date()
 		curDate		:	new Date()
@@ -9,7 +9,7 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			@data = new Data(this)
 			@header = new HeaderView({calendar:this})
 			@sg = new SGView({calendar:this})
-			@popup = new Popup(this)
+			@popup = new PopupView({calendar:this})
 			@fullContainer()
 			@bindHandlers()
 		initHtml : () ->
