@@ -1,4 +1,4 @@
-define ['jquery', 'underscore', 'backbone', 'utils'], ($, _, Backbone, utils) ->
+define ['jquery', 'underscore', 'backbone', 'text!../templates/popup.html', 'utils'], ($, _, Backbone, popupTemplate, utils) ->
 	PopupView = Backbone.View.extend({
 		el : $('.b-popup')
 		date : null	
@@ -8,6 +8,8 @@ define ['jquery', 'underscore', 'backbone', 'utils'], ($, _, Backbone, utils) ->
 			@bindHandlers()
 			return
 		render : ()->
+			popupHtml = _.template(popupTemplate)()
+			@$el.html(popupHtml);
 			@$warning = @$('.b-popup__warning')
 			@$description = @$('.b-popup__edit_description')
 			@$name = @$('.b-popup__edit_name')

@@ -1,5 +1,5 @@
 (function() {
-  define(['jquery', 'underscore', 'backbone', 'utils'], function($, _, Backbone, utils) {
+  define(['jquery', 'underscore', 'backbone', 'text!../templates/popup.html', 'utils'], function($, _, Backbone, popupTemplate, utils) {
     var PopupView;
     PopupView = Backbone.View.extend({
       el: $('.b-popup'),
@@ -10,6 +10,9 @@
         this.bindHandlers();
       },
       render: function() {
+        var popupHtml;
+        popupHtml = _.template(popupTemplate)();
+        this.$el.html(popupHtml);
         this.$warning = this.$('.b-popup__warning');
         this.$description = this.$('.b-popup__edit_description');
         this.$name = this.$('.b-popup__edit_name');
