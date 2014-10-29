@@ -1,5 +1,5 @@
 (function() {
-  define(['jquery', 'underscore', 'backbone', 'utils', 'text!../templates/sg.html'], function($, _, Backbone, utils, sgTemplate) {
+  define(['jquery', 'underscore', 'backbone', 'utils', 'text!../templates/search.html', 'text!../templates/sg.html'], function($, _, Backbone, utils, searchTemplate, sgTemplate) {
     var SGView;
     SGView = Backbone.View.extend({
       el: $('.b-search'),
@@ -8,15 +8,15 @@
         this.render();
       },
       render: function() {
-        this.initHtml();
+        var searchHtml;
+        searchHtml = _.template(searchTemplate)();
+        this.$el.html(searchHtml);
+        this.$searchQ = $('.b-search__input');
+        this.$searchSug = $('.b-search__sg');
       },
       events: {
         'keyup .b-search__input': 'keyPress',
         'click .b-search__sg li': 'goToSuggestedCell'
-      },
-      initHtml: function() {
-        this.$searchQ = $('<input />').addClass('b-search__input').attr('placeholder', 'Поиск...').appendTo(this.$el);
-        this.$searchSug = $('<ul />').addClass('b-search__sg').appendTo(this.$el);
       },
       keyPress: function(e) {
         var data, index, isWords, query, value;

@@ -1,4 +1,4 @@
-define ['jquery','underscore', 'backbone', 'utils', 'text!../templates/sg.html'], ($, _, Backbone, utils, sgTemplate) ->
+define ['jquery','underscore', 'backbone', 'utils', 'text!../templates/search.html', 'text!../templates/sg.html'], ($, _, Backbone, utils, searchTemplate, sgTemplate) ->
 	SGView = Backbone.View.extend({
 		el : $('.b-search')
 		initialize : (options)->
@@ -6,17 +6,15 @@ define ['jquery','underscore', 'backbone', 'utils', 'text!../templates/sg.html']
 			@render()
 			return
 		render : ()->
-			@initHtml()
+			searchHtml = _.template(searchTemplate)()
+			@$el.html(searchHtml);
+			@$searchQ 	= 	$('.b-search__input')
+			@$searchSug	= 	$('.b-search__sg')
 			return
 		events : {
 			'keyup .b-search__input' : 'keyPress'
 			'click .b-search__sg li' : 'goToSuggestedCell'
 		}
-
-		initHtml : () ->
-			@$searchQ 	= 	$('<input />').addClass('b-search__input').attr('placeholder','Поиск...').appendTo(@$el)
-			@$searchSug	= 	$('<ul />').addClass('b-search__sg').appendTo(@$el)
-			return
 
 		keyPress: (e) ->
 			query = $(e.currentTarget).val()
