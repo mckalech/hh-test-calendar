@@ -18,25 +18,30 @@
         'click .b-header__nav_next': 'nextMonth',
         'click .b-header__today-btn': 'todayMonth'
       },
+      goToRelativeMonth: function(months) {
+        var newDate;
+        newDate = this.calendar.curDate.get('date');
+        newDate.setMonth(this.calendar.curDate.get('date').getMonth() + months);
+        this.goToMonth(newDate);
+      },
       prevMonth: function() {
-        this.calendar.curDate.setMonth(this.calendar.curDate.getMonth() - 1);
-        this.goToMonth();
+        this.goToRelativeMonth(-1);
       },
       nextMonth: function() {
-        this.calendar.curDate.setMonth(this.calendar.curDate.getMonth() + 1);
-        this.goToMonth();
+        this.goToRelativeMonth(1);
       },
       todayMonth: function() {
-        this.calendar.curDate.setMonth(this.calendar.today.getMonth());
-        this.calendar.curDate.setYear(this.calendar.today.getFullYear());
-        this.goToMonth();
+        var newDate;
+        newDate = this.calendar.curDate.get('date');
+        newDate.setMonth(this.calendar.today.getMonth());
+        newDate.setYear(this.calendar.today.getFullYear());
+        this.goToMonth(newDate);
       },
-      goToMonth: function() {
-        this.calendar.hideElements({
-          hidePopup: true,
-          hideSg: true
+      goToMonth: function(newDate) {
+        this.calendar.curDate.unset('date', {
+          silent: true
         });
-        this.calendar.fullContainer();
+        this.calendar.curDate.set('date', newDate);
       },
       setDateText: function(month, year) {
         this.$monthElem.text("" + utils.months[month] + " " + year);

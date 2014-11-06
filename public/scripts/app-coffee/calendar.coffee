@@ -1,7 +1,7 @@
 define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!../templates/table.html'], ($, _, utils, HeaderView, Data, SGView, PopupView, tableTemplate) ->
 	class Calendar 
 		today		:	new Date()
-		curDate		:	new Date()
+		curDate		:	new Backbone.Model({date: new Date()})
 		$curTd 		: 	null
 		
 		constructor: () ->
@@ -19,7 +19,7 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 		bindHandlers : () ->	
 			@$elem.on 'click', '.b-cell', (e)=> 
 				$currentCell = $(e.currentTarget)
-				date = new Date(@curDate)
+				date = new Date(@curDate.get('date'))
 				date.setDate($currentCell.attr('data-date'))
 				@hideElements({hideSg:yes})
 				itemData = {
@@ -31,21 +31,27 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 				@popup.showPopup(itemData)
 				@setCurTd($currentCell)
 				return
+
+			@curDate.on('change', (model, value, options)->
+				@hideElements({hidePopup:yes, hideSg:yes})
+				@fullContainer()
+				return
+			, @)
 			return
 			
 		fullContainer : () ->
 			templateData = {
-				weeksInMonth : @curDate.weeksInMonth()
-				firstDayInMonth : @curDate.firstDayInMonth()
-				daysInMonth : @curDate.daysInMonth()
-				monthDataArray : @data.getMonthData(@curDate.getMonth(),@curDate.getFullYear())
+				weeksInMonth : @curDate.get('date').weeksInMonth()
+				firstDayInMonth : @curDate.get('date').firstDayInMonth()
+				daysInMonth : @curDate.get('date').daysInMonth()
+				monthDataArray : @data.getMonthData(@curDate.get('date').getMonth(),@curDate.get('date').getFullYear())
 				todayDay : @today.getDate()
-				isTodayMonth : @curDate.getMonth() is @today.getMonth() and @curDate.getYear() is @today.getYear()
+				isTodayMonth : @curDate.get('date').getMonth() is @today.getMonth() and @curDate.get('date').getYear() is @today.getYear()
 				utils : utils
 			}
 			$table = _.template(tableTemplate)(templateData)
 			@$elem.html($table)
-			@header.setDateText(@curDate.getMonth(),@curDate.getFullYear())
+			@header.setDateText(@curDate.get('date').getMonth(),@curDate.get('date').getFullYear())
 			return
 			
 		saveItem:(item) ->

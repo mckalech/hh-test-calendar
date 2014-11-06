@@ -45,15 +45,16 @@
         }
       },
       goToSuggestedCell: function(e) {
-        var dateArray;
+        var dateArray, newDate;
         dateArray = $(e.currentTarget).attr('data-date').split('-');
-        this.calendar.curDate.setMonth(dateArray[1]);
-        this.calendar.curDate.setYear(dateArray[2]);
-        this.calendar.fullContainer();
-        this.calendar.hideElements({
-          hidePopup: true,
-          hideSg: true
+        newDate = this.calendar.curDate.get('date');
+        newDate.setDate(dateArray[0]);
+        newDate.setMonth(dateArray[1]);
+        newDate.setYear(dateArray[2]);
+        this.calendar.curDate.unset('date', {
+          silent: true
         });
+        this.calendar.curDate.set('date', newDate);
         this.$searchQ.val('');
       },
       appendSgItem: function(text, query, date) {

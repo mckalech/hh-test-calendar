@@ -4,7 +4,9 @@
     Calendar = (function() {
       Calendar.prototype.today = new Date();
 
-      Calendar.prototype.curDate = new Date();
+      Calendar.prototype.curDate = new Backbone.Model({
+        date: new Date()
+      });
 
       Calendar.prototype.$curTd = null;
 
@@ -33,7 +35,7 @@
           return function(e) {
             var $currentCell, date, itemData;
             $currentCell = $(e.currentTarget);
-            date = new Date(_this.curDate);
+            date = new Date(_this.curDate.get('date'));
             date.setDate($currentCell.attr('data-date'));
             _this.hideElements({
               hideSg: true
@@ -48,22 +50,29 @@
             _this.setCurTd($currentCell);
           };
         })(this));
+        this.curDate.on('change', function(model, value, options) {
+          this.hideElements({
+            hidePopup: true,
+            hideSg: true
+          });
+          this.fullContainer();
+        }, this);
       };
 
       Calendar.prototype.fullContainer = function() {
         var $table, templateData;
         templateData = {
-          weeksInMonth: this.curDate.weeksInMonth(),
-          firstDayInMonth: this.curDate.firstDayInMonth(),
-          daysInMonth: this.curDate.daysInMonth(),
-          monthDataArray: this.data.getMonthData(this.curDate.getMonth(), this.curDate.getFullYear()),
+          weeksInMonth: this.curDate.get('date').weeksInMonth(),
+          firstDayInMonth: this.curDate.get('date').firstDayInMonth(),
+          daysInMonth: this.curDate.get('date').daysInMonth(),
+          monthDataArray: this.data.getMonthData(this.curDate.get('date').getMonth(), this.curDate.get('date').getFullYear()),
           todayDay: this.today.getDate(),
-          isTodayMonth: this.curDate.getMonth() === this.today.getMonth() && this.curDate.getYear() === this.today.getYear(),
+          isTodayMonth: this.curDate.get('date').getMonth() === this.today.getMonth() && this.curDate.get('date').getYear() === this.today.getYear(),
           utils: utils
         };
         $table = _.template(tableTemplate)(templateData);
         this.$elem.html($table);
-        this.header.setDateText(this.curDate.getMonth(), this.curDate.getFullYear());
+        this.header.setDateText(this.curDate.get('date').getMonth(), this.curDate.get('date').getFullYear());
       };
 
       Calendar.prototype.saveItem = function(item) {

@@ -15,22 +15,26 @@ define ['jquery', 'underscore', 'backbone', 'utils', 'text!../templates/header.h
 			'click .b-header__nav_next' : 'nextMonth'
 			'click .b-header__today-btn' : 'todayMonth'
 		}
+		goToRelativeMonth : (months) ->
+			newDate = @calendar.curDate.get('date')
+			newDate.setMonth(@calendar.curDate.get('date').getMonth()+months)
+			@goToMonth(newDate)
+			return
 		prevMonth : () ->
-			@calendar.curDate.setMonth(@calendar.curDate.getMonth()-1)
-			@goToMonth()
+			@goToRelativeMonth(-1)
 			return
 		nextMonth : () ->
-			@calendar.curDate.setMonth(@calendar.curDate.getMonth()+1)
-			@goToMonth()
+			@goToRelativeMonth(1)
 			return
 		todayMonth : () ->
-			@calendar.curDate.setMonth(@calendar.today.getMonth())
-			@calendar.curDate.setYear(@calendar.today.getFullYear())
-			@goToMonth()
+			newDate = @calendar.curDate.get('date')
+			newDate.setMonth(@calendar.today.getMonth())
+			newDate.setYear(@calendar.today.getFullYear())
+			@goToMonth(newDate)
 			return
-		goToMonth : () ->
-			@calendar.hideElements({hidePopup:yes, hideSg:yes})
-			@calendar.fullContainer()
+		goToMonth : (newDate) ->
+			@calendar.curDate.unset('date',{silent:true})
+			@calendar.curDate.set('date',newDate)
 			return
 		setDateText : (month, year)->
 			@$monthElem.text("#{utils.months[month]} #{year}")

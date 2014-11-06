@@ -36,10 +36,12 @@ define ['jquery','underscore', 'backbone', 'utils', 'text!../templates/search.ht
 			return
 		goToSuggestedCell : (e) ->
 			dateArray=$(e.currentTarget).attr('data-date').split('-')
-			@calendar.curDate.setMonth(dateArray[1])
-			@calendar.curDate.setYear(dateArray[2])
-			@calendar.fullContainer()
-			@calendar.hideElements({hidePopup:yes, hideSg:yes})
+			newDate = @calendar.curDate.get('date')
+			newDate.setDate(dateArray[0])
+			newDate.setMonth(dateArray[1])
+			newDate.setYear(dateArray[2])
+			@calendar.curDate.unset('date',{silent:true})
+			@calendar.curDate.set('date',newDate)
 			@$searchQ.val('')
 			return
 		appendSgItem : (text, query, date) ->

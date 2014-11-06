@@ -1,4 +1,5 @@
 .DS_Store
+.env
 
 # Exclude node modules
 node_modules/
