@@ -12,16 +12,20 @@
 				<% dayText = i===0 ? utils.days[j]+", "+d : d %>
 				<% isToday = d===todayDay && isTodayMonth %>
 				<% if (monthDataArray[d]) { %> 
-					<td class="b-cell b-cell_full<% if (isToday){ %> b-cell_today<% } %>" data-date="<%=d%>" data-name="<%=monthDataArray[d].name %>" data-descr="<%=monthDataArray[d].descr %>">
-						<div class='date'><%= dayText %></div>
-						<p class='name'><%= monthDataArray[d].name %></p>
-						<p class='descr'><%= monthDataArray[d].descr %></p>
+					<td class="b-cell b-cell_full<% if (isToday){ %> b-cell_today<% } %>" data-date="<%=d%>">
+						<div>
+							<div class='date'><%= dayText %></div>
+							<p class='name'><%= monthDataArray[d].name %></p>
+							<p class='description'><%= monthDataArray[d].description %></p>
+						</div>
 					</td>
 				<% }else {%>
 					<td class="b-cell<% if (isToday){ %> b-cell_today<% } %>" data-date="<%=d%>">
-						<div class='date'><%= dayText %></div>
-						<p class='name'></p>
-						<p class='descr'></p>
+						<div>
+							<div class='date'><%= dayText %></div>
+							<p class='name'></p>
+							<p class='description'></p>
+						</div>
 					</td>
 				<% } %>
 			<% } %>

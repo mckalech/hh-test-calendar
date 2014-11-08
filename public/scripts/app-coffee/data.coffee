@@ -13,7 +13,7 @@ define ['jquery'], ($) ->
 			key= "#{options.date.getDate()}-#{options.date.getMonth()}-#{options.date.getFullYear()}"	
 			if save
 				@info[key]={}
-				@info[key].descr = options.descr
+				@info[key].description = options.description
 				@info[key].name = options.name
 			else
 				delete @info[key]
@@ -29,5 +29,9 @@ define ['jquery'], ($) ->
 				if dataItem and month is itemDate.month and year is itemDate.year
 					monthDataArray[itemDate.day] = dataItem
 			return monthDataArray
+		getDayData : (date) ->
+			key= "#{date.getDate()}-#{date.getMonth()}-#{date.getFullYear()}"	
+			data = @getData()
+			data[key]
 
 	return Data

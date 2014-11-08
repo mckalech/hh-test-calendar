@@ -53,8 +53,10 @@
         name = this.$name.find('span').text();
         if (description && name) {
           this.calendar.saveItem({
-            name: name,
-            description: description,
+            data: {
+              name: name,
+              description: description
+            },
             date: this.date
           });
         } else if (!(description || name)) {
@@ -81,16 +83,14 @@
         })(this));
       },
       showPopup: function(itemData) {
-        var description, full, name;
+        var full;
         this.date = itemData.date;
         full = itemData.full;
-        description = itemData.description;
-        name = itemData.name;
         $('body').addClass('body-block');
         this.$date.text("" + (this.date.getDate()) + " " + utils.monthSklon[this.date.getMonth()]);
         if (full) {
-          this.$description.removeClass('b-popup__edit_empty').find('span').text(description);
-          this.$name.removeClass('b-popup__edit_empty').find('span').text(name);
+          this.$description.removeClass('b-popup__edit_empty').find('span').text(itemData.data.description);
+          this.$name.removeClass('b-popup__edit_empty').find('span').text(itemData.data.name);
         } else {
           this.$description.add(this.$name).addClass('b-popup__edit_empty').find('span').text('');
           this.clearInputs();

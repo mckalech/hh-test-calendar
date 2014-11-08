@@ -32,8 +32,8 @@
             if (value.name.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
               this.appendSgItem(value.name, query, index);
               isWords = true;
-            } else if (value.descr.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-              this.appendSgItem(value.descr, query, index);
+            } else if (value.description.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+              this.appendSgItem(value.description, query, index);
               isWords = true;
             }
           }

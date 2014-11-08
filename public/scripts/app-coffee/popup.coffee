@@ -45,8 +45,10 @@ define ['jquery', 'underscore', 'backbone', 'text!../templates/popup.html', 'uti
 			name = @$name.find('span').text()
 			if description and name	
 				@calendar.saveItem({
-					name : name
-					description : description
+					data : {
+						name : name
+						description : description
+					} 
 					date : @date
 				})
 			else unless description or name	
@@ -67,14 +69,12 @@ define ['jquery', 'underscore', 'backbone', 'text!../templates/popup.html', 'uti
 		showPopup: (itemData) ->
 			@date = itemData.date
 			full = itemData.full
-			description = itemData.description
-			name = itemData.name
-
+				
 			$('body').addClass('body-block');
 			@$date.text("#{@date.getDate()} #{utils.monthSklon[@date.getMonth()]}")	
-			if full			
-				@$description.removeClass('b-popup__edit_empty').find('span').text(description)
-				@$name.removeClass('b-popup__edit_empty').find('span').text(name)
+			if full
+				@$description.removeClass('b-popup__edit_empty').find('span').text(itemData.data.description)
+				@$name.removeClass('b-popup__edit_empty').find('span').text(itemData.data.name)
 			else
 				@$description.add(@$name).addClass('b-popup__edit_empty').find('span').text('')
 				@clearInputs()

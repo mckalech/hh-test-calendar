@@ -20,7 +20,7 @@
         key = "" + (options.date.getDate()) + "-" + (options.date.getMonth()) + "-" + (options.date.getFullYear());
         if (save) {
           this.info[key] = {};
-          this.info[key].descr = options.descr;
+          this.info[key].description = options.description;
           this.info[key].name = options.name;
         } else {
           delete this.info[key];
@@ -47,6 +47,13 @@
           }
         }
         return monthDataArray;
+      };
+
+      Data.prototype.getDayData = function(date) {
+        var data, key;
+        key = "" + (date.getDate()) + "-" + (date.getMonth()) + "-" + (date.getFullYear());
+        data = this.getData();
+        return data[key];
       };
 
       return Data;

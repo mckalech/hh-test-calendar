@@ -51,8 +51,7 @@
         itemData = {
           date: date,
           full: $currentCell.hasClass('b-cell_full'),
-          description: $currentCell.attr('data-descr'),
-          name: $currentCell.attr('data-name')
+          data: this.data.getDayData(date)
         };
         this.popup.showPopup(itemData);
         this.setCurTd($currentCell);
@@ -68,13 +67,13 @@
       },
       saveItem: function(item) {
         var date, description, name, savedData;
-        name = item.name;
-        description = item.description;
+        name = item.data.name;
+        description = item.data.description;
         date = item.date;
-        this.$curTd.attr('data-descr', description).attr('data-name', name).addClass('b-cell_full').find('.name').text(name).siblings('.descr').text(description);
+        this.$curTd.addClass('b-cell_full').find('.name').text(name).siblings('.description').text(description);
         savedData = {
           date: date,
-          descr: description,
+          description: description,
           name: name
         };
         this.data.setData(savedData, true);
@@ -85,7 +84,7 @@
       },
       deleteItem: function(item) {
         var savedData;
-        this.$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('b-cell_full').find('p').text('');
+        this.$curTd.removeClass('b-cell_full').find('p').text('');
         savedData = {
           date: item.date
         };

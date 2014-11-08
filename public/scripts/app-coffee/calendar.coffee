@@ -37,8 +37,7 @@ define ['jquery', 'underscore', 'backbone', 'utils', 'header', 'data', 'sg', 'po
 			itemData = {
 				date : date
 				full : $currentCell.hasClass('b-cell_full')	
-				description : $currentCell.attr('data-descr')
-				name : $currentCell.attr('data-name')
+				data : @data.getDayData(date)
 			}
 			@popup.showPopup(itemData)
 			@setCurTd($currentCell)
@@ -52,15 +51,14 @@ define ['jquery', 'underscore', 'backbone', 'utils', 'header', 'data', 'sg', 'po
 			return
 			
 		saveItem:(item) ->
-			name = item.name
-			description = item.description
+			name = item.data.name
+			description = item.data.description
 			date = item.date
 
-			@$curTd.attr('data-descr', description).attr('data-name', name).addClass('b-cell_full')
-				.find('.name').text(name).siblings('.descr').text(description)
+			@$curTd.addClass('b-cell_full').find('.name').text(name).siblings('.description').text(description)
 			savedData = {
 				date : date
-				descr : description
+				description : description
 				name : name
 			}
 			@data.setData(savedData, yes)	
@@ -69,8 +67,7 @@ define ['jquery', 'underscore', 'backbone', 'utils', 'header', 'data', 'sg', 'po
 			return 
 
 		deleteItem:(item) ->
-			@$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('b-cell_full')
-				.find('p').text('')
+			@$curTd.removeClass('b-cell_full').find('p').text('')
 			savedData = {
 				date : item.date
 			}

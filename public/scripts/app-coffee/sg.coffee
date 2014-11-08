@@ -27,8 +27,8 @@ define ['jquery','underscore', 'backbone', 'utils', 'text!../templates/search.ht
 					if value.name.toLowerCase().indexOf(query.toLowerCase())>=0
 						@appendSgItem(value.name, query, index)
 						isWords = yes
-					else if value.descr.toLowerCase().indexOf(query.toLowerCase())>=0
-						@appendSgItem(value.descr, query, index)
+					else if value.description.toLowerCase().indexOf(query.toLowerCase())>=0
+						@appendSgItem(value.description, query, index)
 						isWords = yes
 				@hideSG() unless isWords
 			else
