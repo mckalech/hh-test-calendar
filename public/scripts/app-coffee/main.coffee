@@ -12,9 +12,9 @@ require.config
             deps: ['underscore', 'jquery']
             exports: 'Backbone'
 
-require ['jquery', 'calendar'], ($ , Calendar) ->
+require ['jquery', 'calendar'], ($ , CalendarView) ->
 	$ ->
-		new Calendar()
+		new CalendarView()
 		return  
 	return
 

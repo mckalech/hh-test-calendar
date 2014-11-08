@@ -1,17 +1,14 @@
 (function() {
-  define(['jquery', 'underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!../templates/table.html'], function($, _, utils, HeaderView, Data, SGView, PopupView, tableTemplate) {
-    var Calendar;
-    Calendar = (function() {
-      Calendar.prototype.today = new Date();
-
-      Calendar.prototype.curDate = new Backbone.Model({
-        date: new Date()
-      });
-
-      Calendar.prototype.$curTd = null;
-
-      function Calendar() {
-        this.initHtml();
+  define(['jquery', 'underscore', 'backbone', 'utils', 'header', 'data', 'sg', 'popup', 'text!../templates/table.html'], function($, _, Backbone, utils, HeaderView, Data, SGView, PopupView, tableTemplate) {
+    var CalendarView;
+    CalendarView = Backbone.View.extend({
+      el: $('.b-table'),
+      initialize: function(options) {
+        this.today = new Date();
+        this.curDate = new Backbone.Model({
+          date: new Date()
+        });
+        this.$curTd = null;
         this.data = new Data(this);
         this.header = new HeaderView({
           calendar: this
@@ -22,44 +19,13 @@
         this.popup = new PopupView({
           calendar: this
         });
-        this.fullContainer();
         this.bindHandlers();
-      }
-
-      Calendar.prototype.initHtml = function() {
-        this.$elem = $('.b-table');
-      };
-
-      Calendar.prototype.bindHandlers = function() {
-        this.$elem.on('click', '.b-cell', (function(_this) {
-          return function(e) {
-            var $currentCell, date, itemData;
-            $currentCell = $(e.currentTarget);
-            date = new Date(_this.curDate.get('date'));
-            date.setDate($currentCell.attr('data-date'));
-            _this.hideElements({
-              hideSg: true
-            });
-            itemData = {
-              date: date,
-              full: $currentCell.hasClass('b-cell_full'),
-              description: $currentCell.attr('data-descr'),
-              name: $currentCell.attr('data-name')
-            };
-            _this.popup.showPopup(itemData);
-            _this.setCurTd($currentCell);
-          };
-        })(this));
-        this.curDate.on('change', function(model, value, options) {
-          this.hideElements({
-            hidePopup: true,
-            hideSg: true
-          });
-          this.fullContainer();
-        }, this);
-      };
-
-      Calendar.prototype.fullContainer = function() {
+        this.render();
+      },
+      events: {
+        'click .b-cell': 'cellClick'
+      },
+      render: function() {
         var $table, templateData;
         templateData = {
           weeksInMonth: this.curDate.get('date').weeksInMonth(),
@@ -71,11 +37,36 @@
           utils: utils
         };
         $table = _.template(tableTemplate)(templateData);
-        this.$elem.html($table);
+        this.$el.html($table);
         this.header.setDateText(this.curDate.get('date').getMonth(), this.curDate.get('date').getFullYear());
-      };
-
-      Calendar.prototype.saveItem = function(item) {
+      },
+      cellClick: function(e) {
+        var $currentCell, date, itemData;
+        $currentCell = $(e.currentTarget);
+        date = new Date(this.curDate.get('date'));
+        date.setDate($currentCell.attr('data-date'));
+        this.hideElements({
+          hideSg: true
+        });
+        itemData = {
+          date: date,
+          full: $currentCell.hasClass('b-cell_full'),
+          description: $currentCell.attr('data-descr'),
+          name: $currentCell.attr('data-name')
+        };
+        this.popup.showPopup(itemData);
+        this.setCurTd($currentCell);
+      },
+      bindHandlers: function() {
+        this.curDate.on('change', function(model, value, options) {
+          this.hideElements({
+            hidePopup: true,
+            hideSg: true
+          });
+          this.render();
+        }, this);
+      },
+      saveItem: function(item) {
         var date, description, name, savedData;
         name = item.name;
         description = item.description;
@@ -91,9 +82,8 @@
         this.hideElements({
           hidePopup: true
         });
-      };
-
-      Calendar.prototype.deleteItem = function(item) {
+      },
+      deleteItem: function(item) {
         var savedData;
         this.$curTd.removeAttr('data-descr').removeAttr('data-name').removeClass('b-cell_full').find('p').text('');
         savedData = {
@@ -104,29 +94,24 @@
         this.hideElements({
           hidePopup: true
         });
-      };
-
-      Calendar.prototype.setCurTd = function($tdElem) {
+      },
+      setCurTd: function($tdElem) {
         this.$curTd = $tdElem;
-        this.$elem.find('.b-cell').removeClass('active');
+        this.$el.find('.b-cell').removeClass('active');
         if (this.$curTd) {
           this.$curTd.addClass('active');
         }
-      };
-
-      Calendar.prototype.hideElements = function(options) {
+      },
+      hideElements: function(options) {
         if (options.hidePopup) {
           this.popup.hidePopup();
         }
         if (options.hideSg) {
           this.sg.hideSG();
         }
-      };
-
-      return Calendar;
-
-    })();
-    return Calendar;
+      }
+    });
+    return CalendarView;
   });
 
 }).call(this);

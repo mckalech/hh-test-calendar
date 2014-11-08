@@ -18,9 +18,9 @@
     }
   });
 
-  require(['jquery', 'calendar'], function($, Calendar) {
+  require(['jquery', 'calendar'], function($, CalendarView) {
     $(function() {
-      new Calendar();
+      new CalendarView();
     });
   });
 

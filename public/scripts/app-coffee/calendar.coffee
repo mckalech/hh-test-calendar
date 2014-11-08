@@ -1,45 +1,21 @@
-define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!../templates/table.html'], ($, _, utils, HeaderView, Data, SGView, PopupView, tableTemplate) ->
-	class Calendar 
-		today		:	new Date()
-		curDate		:	new Backbone.Model({date: new Date()})
-		$curTd 		: 	null
-		
-		constructor: () ->
-			@initHtml()
+define ['jquery', 'underscore', 'backbone', 'utils', 'header', 'data', 'sg', 'popup', 'text!../templates/table.html'], ($, _, Backbone, utils, HeaderView, Data, SGView, PopupView, tableTemplate) ->
+	CalendarView = Backbone.View.extend({
+		el : $('.b-table') 
+		initialize : (options)->
+			@today = new Date()
+			@curDate = new Backbone.Model({date: new Date()})
+			@$curTd = null
 			@data = new Data(this)
 			@header = new HeaderView({calendar:this})
 			@sg = new SGView({calendar:this})
 			@popup = new PopupView({calendar:this})
-			@fullContainer()
 			@bindHandlers()
-		initHtml : () ->
-			@$elem = $('.b-table')
+			@render()
 			return
-
-		bindHandlers : () ->	
-			@$elem.on 'click', '.b-cell', (e)=> 
-				$currentCell = $(e.currentTarget)
-				date = new Date(@curDate.get('date'))
-				date.setDate($currentCell.attr('data-date'))
-				@hideElements({hideSg:yes})
-				itemData = {
-					date : date
-					full : $currentCell.hasClass('b-cell_full')	
-					description : $currentCell.attr('data-descr')
-					name : $currentCell.attr('data-name')
-				}
-				@popup.showPopup(itemData)
-				@setCurTd($currentCell)
-				return
-
-			@curDate.on('change', (model, value, options)->
-				@hideElements({hidePopup:yes, hideSg:yes})
-				@fullContainer()
-				return
-			, @)
-			return
-			
-		fullContainer : () ->
+		events : {
+			'click .b-cell' : 'cellClick'
+		}
+		render : ()->
 			templateData = {
 				weeksInMonth : @curDate.get('date').weeksInMonth()
 				firstDayInMonth : @curDate.get('date').firstDayInMonth()
@@ -50,8 +26,29 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 				utils : utils
 			}
 			$table = _.template(tableTemplate)(templateData)
-			@$elem.html($table)
+			@$el.html($table)
 			@header.setDateText(@curDate.get('date').getMonth(),@curDate.get('date').getFullYear())
+			return
+		cellClick : (e) -> 
+			$currentCell = $(e.currentTarget)
+			date = new Date(@curDate.get('date'))
+			date.setDate($currentCell.attr('data-date'))
+			@hideElements({hideSg:yes})
+			itemData = {
+				date : date
+				full : $currentCell.hasClass('b-cell_full')	
+				description : $currentCell.attr('data-descr')
+				name : $currentCell.attr('data-name')
+			}
+			@popup.showPopup(itemData)
+			@setCurTd($currentCell)
+			return
+		bindHandlers : () ->	
+			@curDate.on('change', (model, value, options)->
+				@hideElements({hidePopup:yes, hideSg:yes})
+				@render()
+				return
+			, @)
 			return
 			
 		saveItem:(item) ->
@@ -84,7 +81,7 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 
 		setCurTd : ($tdElem) ->
 			@$curTd = $tdElem;
-			@$elem.find('.b-cell').removeClass('active');
+			@$el.find('.b-cell').removeClass('active');
 			if @$curTd
 				@$curTd.addClass('active');
 			return
@@ -92,5 +89,5 @@ define ['jquery','underscore', 'utils', 'header', 'data', 'sg', 'popup', 'text!.
 			if options.hidePopup then @popup.hidePopup()
 			if options.hideSg then @sg.hideSG()
 			return
-			
-	return Calendar
+	})
+	return CalendarView
