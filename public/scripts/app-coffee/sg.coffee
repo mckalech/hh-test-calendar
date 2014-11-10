@@ -18,9 +18,9 @@ define ['jquery','underscore', 'backbone', 'utils', 'text!../templates/search.ht
 		keyPress: (e) ->
 			query = $(e.currentTarget).val()
 			isWords = no
+			data = @calendar.data.getSortedData()
 			@$searchSug.html('')
 			if query.length>2
-				data = @calendar.data.getSortedData()
 				@$searchSug.show()
 				isWords = no
 				for item in data			

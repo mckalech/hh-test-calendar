@@ -22,9 +22,9 @@
         var data, isWords, item, query, _i, _len;
         query = $(e.currentTarget).val();
         isWords = false;
+        data = this.calendar.data.getSortedData();
         this.$searchSug.html('');
         if (query.length > 2) {
-          data = this.calendar.data.getSortedData();
           this.$searchSug.show();
           isWords = false;
           for (_i = 0, _len = data.length; _i < _len; _i++) {
