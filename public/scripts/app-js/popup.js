@@ -95,12 +95,12 @@
           this.$description.add(this.$name).addClass('b-popup__edit_empty').find('span').text('');
           this.clearInputs();
         }
-        this.$el.fadeIn(100);
+        this.$el.addClass('active');
         this.$warning.removeClass('visible');
       },
       hidePopup: function() {
         $('body').removeClass('body-block');
-        this.$el.fadeOut(100);
+        this.$el.removeClass('active');
         this.calendar.setCurTd(null);
       },
       clearInputs: function() {

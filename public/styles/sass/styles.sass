@@ -224,9 +224,18 @@ body
 	right: 0
 	bottom: 0
 	z-index: 2
-	display: none
+	opacity: 0
+	visibility: hidden
+	display:block
 	overflow: auto
 	background: rgba(100,100,100,0.75)
+	@include transition(visibility 0s 0.4s, opacity 0.4s)
+
+	&.active
+		opacity: 1
+		visibility: visible
+		@include transition(opacity 0.4s)
+		
 
 	.popup__window
 		z-index: 2

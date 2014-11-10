@@ -78,12 +78,12 @@ define ['jquery', 'underscore', 'backbone', 'text!../templates/popup.html', 'uti
 			else
 				@$description.add(@$name).addClass('b-popup__edit_empty').find('span').text('')
 				@clearInputs()
-			@$el.fadeIn(100)
+			@$el.addClass('active')
 			@$warning.removeClass('visible')
 			return	
 		hidePopup:() ->
 			$('body').removeClass('body-block');
-			@$el.fadeOut(100)
+			@$el.removeClass('active')
 			@calendar.setCurTd(null)
 			return
 		clearInputs :() ->
