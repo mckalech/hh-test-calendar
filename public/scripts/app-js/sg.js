@@ -19,21 +19,21 @@
         'click .b-search__sg li': 'goToSuggestedCell'
       },
       keyPress: function(e) {
-        var data, index, isWords, query, value;
+        var data, isWords, item, query, _i, _len;
         query = $(e.currentTarget).val();
-        data = this.calendar.data.getData();
         isWords = false;
         this.$searchSug.html('');
         if (query.length > 2) {
+          data = this.calendar.data.getSortedData();
           this.$searchSug.show();
           isWords = false;
-          for (index in data) {
-            value = data[index];
-            if (value.name.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-              this.appendSgItem(value.name, query, index);
+          for (_i = 0, _len = data.length; _i < _len; _i++) {
+            item = data[_i];
+            if (item.info.name.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+              this.appendSgItem(item.info.name, query, item.dateKey);
               isWords = true;
-            } else if (value.description.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-              this.appendSgItem(value.description, query, index);
+            } else if (item.info.description.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+              this.appendSgItem(item.info.description, query, item.dateKey);
               isWords = true;
             }
           }
@@ -63,7 +63,8 @@
           replStr: text.replaceAll(query, "<b>" + query + "</b>"),
           date: date,
           day: date.split('-')[0],
-          month: utils.monthSklon[date.split('-')[1]]
+          month: utils.monthSklon[date.split('-')[1]],
+          year: date.split('-')[2]
         };
         sgHtml = _.template(sgTemplate)(templateData);
         this.$searchSug.append(sgHtml);

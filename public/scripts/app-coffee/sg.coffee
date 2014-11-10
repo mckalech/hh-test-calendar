@@ -17,18 +17,18 @@ define ['jquery','underscore', 'backbone', 'utils', 'text!../templates/search.ht
 		}
 		keyPress: (e) ->
 			query = $(e.currentTarget).val()
-			data = @calendar.data.getData()
 			isWords = no
 			@$searchSug.html('')
 			if query.length>2
+				data = @calendar.data.getSortedData()
 				@$searchSug.show()
 				isWords = no
-				for index, value of data			
-					if value.name.toLowerCase().indexOf(query.toLowerCase())>=0
-						@appendSgItem(value.name, query, index)
+				for item in data			
+					if item.info.name.toLowerCase().indexOf(query.toLowerCase())>=0
+						@appendSgItem(item.info.name, query, item.dateKey)
 						isWords = yes
-					else if value.description.toLowerCase().indexOf(query.toLowerCase())>=0
-						@appendSgItem(value.description, query, index)
+					else if item.info.description.toLowerCase().indexOf(query.toLowerCase())>=0
+						@appendSgItem(item.info.description, query, item.dateKey)
 						isWords = yes
 				@hideSG() unless isWords
 			else
@@ -50,6 +50,7 @@ define ['jquery','underscore', 'backbone', 'utils', 'text!../templates/search.ht
 				date : date
 				day : date.split('-')[0]
 				month : utils.monthSklon[date.split('-')[1]]
+				year : date.split('-')[2]
 			}
 			sgHtml = _.template(sgTemplate)(templateData)
 			@$searchSug.append(sgHtml)

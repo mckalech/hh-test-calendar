@@ -29,7 +29,7 @@ define ['jquery', 'underscore', 'backbone', 'utils', 'text!../templates/header.h
 		todayMonth : () ->
 			newDate = @calendar.curDate.get('date')
 			newDate.setMonth(@calendar.today.getMonth())
-			newDate.setYear(@calendar.today.getFullYear())
+			newDate.setFullYear(@calendar.today.getFullYear())
 			@goToMonth(newDate)
 			return
 		goToMonth : (newDate) ->

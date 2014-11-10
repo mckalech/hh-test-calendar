@@ -34,7 +34,7 @@
         var newDate;
         newDate = this.calendar.curDate.get('date');
         newDate.setMonth(this.calendar.today.getMonth());
-        newDate.setYear(this.calendar.today.getFullYear());
+        newDate.setFullYear(this.calendar.today.getFullYear());
         this.goToMonth(newDate);
       },
       goToMonth: function(newDate) {
